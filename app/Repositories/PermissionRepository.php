@@ -21,9 +21,18 @@ class PermissionRepository
     {
         return Role::query()
             ->orderBy('name')
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'guard_name']);
     }
 
+
+    public function roleNamesByIds(array $ids, string $guardName): array
+    {
+        // WAJIB difilter berdasarkan guard_name agar sinkron
+        return Role::whereIn('id', $ids)
+            ->where('guard_name', $guardName)
+            ->pluck('name')
+            ->toArray();
+    }
     public function create(array $payload): Permission
     {
         return Permission::query()->create($payload);

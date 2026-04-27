@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use Spatie\Permission\Models\Permission;
 
 class RoleRepository
 {
@@ -21,7 +21,16 @@ class RoleRepository
     {
         return Permission::query()
             ->orderBy('name')
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'guard_name']);
+    }
+
+    public function permissionNamesByIds(array $permissionIds, string $guardName): array
+    {
+        return Permission::query()
+            ->where('guard_name', $guardName)
+            ->whereIn('id', $permissionIds)
+            ->pluck('name')
+            ->all();
     }
 
     public function create(array $payload): Role

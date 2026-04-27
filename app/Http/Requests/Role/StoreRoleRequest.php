@@ -29,7 +29,10 @@ class StoreRoleRequest extends FormRequest
             ],
             'guard_name' => ['required', 'string', 'max:255'],
             'permissions' => ['nullable', 'array'],
-            'permissions.*' => ['integer', 'exists:permissions,id'],
+            'permissions.*' => [
+                'integer',
+                Rule::exists('permissions', 'id')->where(fn ($query) => $query->where('guard_name', $guardName)),
+            ],
         ];
     }
 }

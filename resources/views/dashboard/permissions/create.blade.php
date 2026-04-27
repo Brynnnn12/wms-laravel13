@@ -1,57 +1,109 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div class="py-8">
+        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
 
-                    <form action="{{ route('permissions.store') }}" method="POST">
-                        @csrf
+            <div class="rounded-3xl bg-gradient-to-r from-blue-600 via-cyan-600 to-indigo-600 p-6 md:p-8 shadow-xl mb-6">
+                <p class="text-blue-100 text-sm font-medium mb-2">Access Control</p>
+                <h1 class="text-3xl font-bold text-white">Tambah Permission</h1>
+                <p class="text-blue-100 text-sm mt-2">
+                    Buat permission baru dan hubungkan ke role yang sesuai.
+                </p>
+            </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+
+                <form action="{{ route('permissions.store') }}" method="POST">
+                    @csrf
+
+                    <div class="p-6 md:p-8 space-y-8">
+
+                        {{-- FORM --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Nama Permission</label>
-                                <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('name') }}" required>
-                                @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Nama Permission
+                                </label>
+
+                                <input type="text"
+                                       name="name"
+                                       value="{{ old('name') }}"
+                                       required
+                                       placeholder="Contoh: create-product"
+                                       class="w-full rounded-2xl border-slate-300 focus:border-blue-500 focus:ring-blue-500">
                             </div>
 
                             <div>
-                                <label for="guard_name" class="block text-sm font-medium text-gray-700">Guard</label>
-                                <select name="guard_name" id="guard_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
-                                    @foreach (['web', 'api'] as $guard)
-                                        <option value="{{ $guard }}" {{ old('guard_name', 'web') === $guard ? 'selected' : '' }}>{{ strtoupper($guard) }}</option>
-                                    @endforeach
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Guard Name
+                                </label>
+
+                                <select name="guard_name"
+                                        class="w-full rounded-2xl border-slate-300 focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="web">WEB</option>
+                                    <option value="api">API</option>
                                 </select>
-                                @error('guard_name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                            </div>
+
+                        </div>
+
+                        {{-- ROLE SECTION --}}
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-4">
+                                Hubungkan ke Role
+                            </h3>
+
+                            <div class="space-y-5">
+                                @foreach ($roles as $guard => $roleGroup)
+                                    <div class="rounded-2xl border border-slate-200 overflow-hidden">
+
+                                        <div class="px-5 py-3 bg-slate-50 border-b border-slate-200">
+                                            <span class="text-xs font-bold uppercase text-slate-600">
+                                                Guard : {{ $guard }}
+                                            </span>
+                                        </div>
+
+                                        <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+                                            @foreach ($roleGroup as $role)
+                                                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer">
+
+                                                    <input type="checkbox"
+                                                           name="roles[]"
+                                                           value="{{ $role->id }}"
+                                                           class="rounded border-slate-300 text-blue-600">
+
+                                                    <span class="text-sm font-medium text-slate-700">
+                                                        {{ $role->name }}
+                                                    </span>
+
+                                                </label>
+                                            @endforeach
+
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
 
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Role yang memiliki permission ini</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border border-gray-200 rounded-md p-4 max-h-80 overflow-y-auto">
-                                @forelse ($roles as $role)
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" name="roles[]" value="{{ $role->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" {{ in_array($role->id, old('roles', []), true) ? 'checked' : '' }}>
-                                        <span class="ml-2 text-sm text-gray-700">{{ $role->name }}</span>
-                                    </label>
-                                @empty
-                                    <span class="text-sm text-gray-500">Belum ada role.</span>
-                                @endforelse
-                            </div>
-                            @error('roles') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            @error('roles.*') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                        </div>
+                        {{-- ACTION --}}
+                        <div class="pt-6 border-t border-slate-200 flex justify-end gap-3">
 
-                        <div class="flex items-center justify-end">
-                            <a href="{{ route('permissions.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 mr-2">
+                            <a href="{{ route('permissions.index') }}"
+                               class="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition">
                                 Batal
                             </a>
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
 
-                </div>
+                            <button type="submit"
+                                    class="px-6 py-3 rounded-2xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow">
+                                Simpan Permission
+                            </button>
+
+                        </div>
+
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>

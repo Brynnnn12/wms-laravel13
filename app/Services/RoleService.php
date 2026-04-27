@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Repositories\RoleRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -22,9 +23,10 @@ class RoleService
         return $this->roleRepository->paginate($perPage);
     }
 
-    public function permissions(): Collection
+    public function permissionsByGuard(): \Illuminate\Support\Collection
     {
-        return $this->roleRepository->permissions();
+        // Pastikan di RoleRepository ada method permissions() yang mengambil semua permission
+        return $this->roleRepository->permissions()->groupBy('guard_name');
     }
 
     public function create(array $validated): Role
@@ -34,7 +36,8 @@ class RoleService
             unset($validated['permissions']);
 
             $role = $this->roleRepository->create($validated);
-            $role->syncPermissions($permissionIds);
+            $permissionNames = $this->roleRepository->permissionNamesByIds($permissionIds, $role->guard_name);
+            $role->syncPermissions($permissionNames);
 
             app(PermissionRegistrar::class)->forgetCachedPermissions();
 
@@ -42,18 +45,25 @@ class RoleService
         });
     }
 
+    // app/Services/RoleService.php
+
     public function update(Role $role, array $validated): Role
     {
         return DB::transaction(function () use ($role, $validated) {
-            $permissionIds = $validated['permissions'] ?? [];
-            unset($validated['permissions']);
+            $role->update([
+                'name' => $validated['name'],
+                'guard_name' => $validated['guard_name'],
+            ]);
 
-            $updatedRole = $this->roleRepository->update($role, $validated);
-            $updatedRole->syncPermissions($permissionIds);
+            // AMBIL nama permission HANYA yang guard-nya sama dengan guard role ini
+            $validPermissions = Permission::whereIn('id', $validated['permissions'] ?? [])
+                ->where('guard_name', $validated['guard_name'])
+                ->pluck('name')
+                ->toArray();
 
-            app(PermissionRegistrar::class)->forgetCachedPermissions();
+            $role->syncPermissions($validPermissions);
 
-            return $updatedRole->refresh();
+            return $role;
         });
     }
 

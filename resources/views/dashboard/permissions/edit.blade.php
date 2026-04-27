@@ -1,62 +1,133 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div class="py-8">
+        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
 
-                    <form action="{{ route('permissions.update', $permission) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+            <div class="rounded-3xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-6 md:p-8 shadow-xl mb-6">
+                <p class="text-orange-100 text-sm font-medium mb-2">Access Control</p>
+                <h1 class="text-3xl font-bold text-white">
+                    Edit Permission
+                </h1>
+                <p class="text-orange-100 text-sm mt-2">
+                    {{ $permission->name }}
+                </p>
+            </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+
+                <form action="{{ route('permissions.update', $permission) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    @php
+                        $currentRoleIds = $permission->roles->pluck('id')->toArray();
+                    @endphp
+
+                    <div class="p-6 md:p-8 space-y-8">
+
+                        {{-- FORM --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Nama Permission</label>
-                                <input type="text" name="name" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('name', $permission->name) }}" required>
-                                @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Nama Permission
+                                </label>
+
+                                <input type="text"
+                                       name="name"
+                                       value="{{ old('name', $permission->name) }}"
+                                       required
+                                       class="w-full rounded-2xl border-slate-300 focus:border-amber-500 focus:ring-amber-500">
+
+                                @error('name')
+                                    <p class="text-sm text-rose-600 mt-2">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
-                                <label for="guard_name" class="block text-sm font-medium text-gray-700">Guard</label>
-                                <select name="guard_name" id="guard_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
-                                    @foreach (['web', 'api'] as $guard)
-                                        <option value="{{ $guard }}" {{ old('guard_name', $permission->guard_name) === $guard ? 'selected' : '' }}>{{ strtoupper($guard) }}</option>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Guard Name
+                                </label>
+
+                                <select name="guard_name"
+                                        class="w-full rounded-2xl border-slate-300 focus:border-amber-500 focus:ring-amber-500">
+
+                                    @foreach(['web','api'] as $guardName)
+                                        <option value="{{ $guardName }}"
+                                            {{ old('guard_name', $permission->guard_name) == $guardName ? 'selected' : '' }}>
+                                            {{ strtoupper($guardName) }}
+                                        </option>
                                     @endforeach
+
                                 </select>
-                                @error('guard_name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                            </div>
+
+                        </div>
+
+                        {{-- ROLE --}}
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-4">
+                                Relasi Role
+                            </h3>
+
+                            <div class="space-y-5">
+
+                                @foreach ($roles as $guard => $roleGroup)
+
+                                    <div class="rounded-2xl border border-slate-200 overflow-hidden">
+
+                                        <div class="px-5 py-3 bg-slate-50 border-b border-slate-200">
+                                            <span class="text-xs font-bold uppercase text-slate-600">
+                                                Guard : {{ $guard }}
+                                            </span>
+                                        </div>
+
+                                        <div class="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+                                            @foreach ($roleGroup as $role)
+                                                <label class="flex items-center gap-3 rounded-2xl border p-4 cursor-pointer transition
+                                                    {{ in_array($role->id, $currentRoleIds)
+                                                        ? 'border-amber-300 bg-amber-50'
+                                                        : 'border-slate-200 hover:border-amber-300 hover:bg-amber-50/50' }}">
+
+                                                    <input type="checkbox"
+                                                           name="roles[]"
+                                                           value="{{ $role->id }}"
+                                                           class="rounded border-slate-300 text-amber-600"
+                                                           {{ in_array($role->id, old('roles', $currentRoleIds)) ? 'checked' : '' }}>
+
+                                                    <span class="text-sm font-medium text-slate-700">
+                                                        {{ $role->name }}
+                                                    </span>
+
+                                                </label>
+                                            @endforeach
+
+                                        </div>
+                                    </div>
+
+                                @endforeach
+
                             </div>
                         </div>
 
-                        @php
-                            $selectedRoles = old('roles', $permission->roles->pluck('id')->all());
-                        @endphp
+                        {{-- ACTION --}}
+                        <div class="pt-6 border-t border-slate-200 flex justify-end gap-3">
 
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Role yang memiliki permission ini</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border border-gray-200 rounded-md p-4 max-h-80 overflow-y-auto">
-                                @forelse ($roles as $role)
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" name="roles[]" value="{{ $role->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" {{ in_array($role->id, $selectedRoles, true) ? 'checked' : '' }}>
-                                        <span class="ml-2 text-sm text-gray-700">{{ $role->name }}</span>
-                                    </label>
-                                @empty
-                                    <span class="text-sm text-gray-500">Belum ada role.</span>
-                                @endforelse
-                            </div>
-                            @error('roles') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            @error('roles.*') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="flex items-center justify-end">
-                            <a href="{{ route('permissions.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 mr-2">
+                            <a href="{{ route('permissions.index') }}"
+                               class="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition">
                                 Batal
                             </a>
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700">
-                                Update
-                            </button>
-                        </div>
-                    </form>
 
-                </div>
+                            <button type="submit"
+                                    class="px-6 py-3 rounded-2xl bg-amber-500 text-white font-semibold hover:bg-amber-600 transition shadow">
+                                Update Permission
+                            </button>
+
+                        </div>
+
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
