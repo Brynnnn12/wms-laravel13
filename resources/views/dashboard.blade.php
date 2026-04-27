@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-8">
+    <div class="py-6">
         <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             {{-- HEADER --}}
@@ -190,58 +190,66 @@
     {{-- CHART JS --}}
     @push('scripts')
     <script>
-        // LINE CHART
-        const ctx = document.getElementById('transactionChart');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr'],
-                datasets: [
-                    {
-                        label: 'Barang Masuk',
-                        data: [120, 190, 170, 220, 260, 326],
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    },
-                    {
-                        label: 'Barang Keluar',
-                        data: [90, 130, 110, 170, 180, 214],
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' }
-                }
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded yet.');
+                return;
             }
-        });
 
-        // DONUT CHART
-        const ctx2 = document.getElementById('categoryChart');
+            const transactionCanvas = document.getElementById('transactionChart');
+            const categoryCanvas = document.getElementById('categoryChart');
 
-        new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['Elektronik', 'ATK', 'Furniture', 'Lainnya'],
-                datasets: [{
-                    data: [35, 25, 20, 20],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                cutout: '68%',
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            if (transactionCanvas) {
+                new Chart(transactionCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr'],
+                        datasets: [
+                            {
+                                label: 'Barang Masuk',
+                                data: [120, 190, 170, 220, 260, 326],
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: 'Barang Keluar',
+                                data: [90, 130, 110, 170, 180, 214],
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'top' }
+                        }
                     }
-                }
+                });
+            }
+
+            if (categoryCanvas) {
+                new Chart(categoryCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Elektronik', 'ATK', 'Furniture', 'Lainnya'],
+                        datasets: [{
+                            data: [35, 25, 20, 20],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        cutout: '68%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
             }
         });
     </script>

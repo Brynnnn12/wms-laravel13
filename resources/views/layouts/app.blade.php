@@ -56,8 +56,8 @@
 
             <x-dashboard.navbar :user="auth()->user()" onMenuClick="sidebarOpen = !sidebarOpen" />
 
-            <main class="main-content flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main class="main-content flex-1 overflow-y-auto overflow-x-hidden p-2 sm:p-4 lg:p-6">
+                <div class="max-w-7xl mx-auto space-y-4">
                     {{ $slot }}
                 </div>
             </main>
