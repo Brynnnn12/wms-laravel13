@@ -1,40 +1,59 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
+    <header class="mb-6">
+        <h2 class="text-xl font-bold text-slate-800">
+            Ubah Password
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+        <p class="text-sm text-slate-500 mt-1">
+            Gunakan password yang kuat untuk menjaga keamanan akun.
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
         @csrf
-        @method('put')
+        @method('PUT')
 
         @if(empty(auth()->user()->google_id))
         <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
+            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                Password Saat Ini
+            </label>
+
+            <input type="password"
+                   name="current_password"
+                   class="w-full rounded-2xl border-slate-300 focus:border-blue-500 focus:ring-blue-500">
+
             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
         </div>
         @endif
 
         <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                Password Baru
+            </label>
+
+            <input type="password"
+                   name="password"
+                   class="w-full rounded-2xl border-slate-300 focus:border-blue-500 focus:ring-blue-500">
+
             <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
         </div>
 
         <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <label class="block text-sm font-semibold text-slate-700 mb-2">
+                Konfirmasi Password Baru
+            </label>
+
+            <input type="password"
+                   name="password_confirmation"
+                   class="w-full rounded-2xl border-slate-300 focus:border-blue-500 focus:ring-blue-500">
+
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-        </div>
+        <button type="submit"
+            class="px-6 py-3 rounded-2xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow">
+            Update Password
+        </button>
     </form>
 </section>
