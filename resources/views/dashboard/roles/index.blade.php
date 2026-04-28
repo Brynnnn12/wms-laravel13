@@ -112,8 +112,7 @@
                                             </a>
 
                                             <form action="{{ route('roles.destroy', $role) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('Yakin ingin menghapus role ini?')">
+                                                  method="POST" data-confirm-delete="true">
                                                 @csrf
                                                 @method('DELETE')
 

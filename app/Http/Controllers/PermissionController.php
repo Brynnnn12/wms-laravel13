@@ -24,6 +24,11 @@ class PermissionController extends Controller
     {
         $permissions = $this->permissionService->paginate();
 
+        $title = 'Hapus Permission!';
+        $text = "Apakah Anda yakin ingin menghapus permission ini?";
+        confirmDelete($title, $text);
+
+
         return view('dashboard.permissions.index', compact('permissions'));
     }
 

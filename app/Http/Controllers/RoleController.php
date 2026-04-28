@@ -24,6 +24,11 @@ class RoleController extends Controller
     {
         $roles = $this->roleService->paginate();
 
+        $title = 'Hapus Role!';
+        $text = "Apakah Anda yakin ingin menghapus role ini?";
+        confirmDelete($title, $text);
+
+
         return view('dashboard.roles.index', compact('roles'));
     }
 

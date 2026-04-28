@@ -114,8 +114,7 @@
                                                 </a>
 
                                                 <form action="{{ route('permissions.destroy', $permission) }}"
-                                                      method="POST"
-                                                      onsubmit="return confirm('Yakin ingin menghapus permission ini?')">
+                                                      method="POST" data-confirm-delete="true">
                                                     @csrf
                                                     @method('DELETE')
 
