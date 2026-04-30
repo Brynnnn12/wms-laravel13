@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Requests\JenisBarang;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateJenisBarangRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return $this->user()->can('jenis barang.update');
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     */
+    public function rules(): array
+    {
+        $jenisBarang = $this->route('jenisBarang');
+
+        return [
+            'jenis_barang' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('jenis_barang', 'jenis_barang')
+                    ->ignore($jenisBarang?->id),
+            ],
+        ];
+    }
+
+    /**
+     * Custom attribute names.
+     */
+    public function attributes(): array
+    {
+        return [
+            'jenis_barang' => 'jenis barang',
+        ];
+    }
+
+    /**
+     * Custom validation messages.
+     */
+    public function messages(): array
+    {
+        return [
+            'jenis_barang.required' => 'Jenis barang wajib diisi.',
+            'jenis_barang.string'   => 'Jenis barang harus berupa teks.',
+            'jenis_barang.max'      => 'Jenis barang tidak boleh lebih dari 255 karakter.',
+            'jenis_barang.unique'   => 'Jenis barang sudah digunakan.',
+        ];
+    }
+
+    /**
+     * Prepare data before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'jenis_barang' => trim((string) $this->input('jenis_barang')),
+        ]);
+    }
+}

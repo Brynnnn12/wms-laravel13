@@ -2,64 +2,136 @@
 
 @php
     $user = auth()->user();
+    $menuGroups = [];
 
     /*
     |--------------------------------------------------------------------------
-    | Menu Configuration
+    | SUPER ADMIN & ADMIN
     |--------------------------------------------------------------------------
     */
+    if ($user && ($user->hasRole('super-admin') || $user->hasRole('admin'))) {
 
-    if ($user && $user->hasRole('karyawan')) {
         $menuGroups = [
+
             [
-                'title' => 'Operasional',
-                'icon'  => 'fa-briefcase',
+                'title' => 'Dashboard',
+                'icon'  => 'fa-gauge',
                 'items' => [
                     [
-                        'icon' => 'fa-calendar-check',
-                        'label' => 'Absensi',
-                        'path' => '#',
-                        'active' => request()->is('absen*')
+                        'icon'   => 'fa-chart-line',
+                        'label'  => 'Dashboard',
+                        'path'   => route('dashboard'),
+                        'active' => request()->routeIs('dashboard'),
                     ],
                 ]
-            ]
-        ];
-    } else {
-        $menuGroups = [
+            ],
+
             [
                 'title' => 'Master Data',
                 'icon'  => 'fa-database',
                 'items' => [
                     [
-                        'icon' => 'fa-users',
-                        'label' => 'Karyawan',
-                        'path' => '#',
-                        'active' => request()->is('karyawan*')
+                        'icon'   => 'fa-tags',
+                        'label'  => 'Jenis Barang',
+                        'path'   => route('jenis-barang.index'),
+                        'active' => request()->is('dashboard/jenis-barang*'),
                     ],
                 ]
-            ]
-        ];
+            ],
 
-        if ($user && $user->hasRole('super-admin')) {
-            $menuGroups[] = [
+            [
                 'title' => 'Hak Akses',
                 'icon'  => 'fa-shield-halved',
                 'items' => [
                     [
-                        'icon' => 'fa-user-shield',
-                        'label' => 'Role',
-                        'path' => route('roles.index'),
-                        'active' => request()->is('dashboard/roles*')
+                        'icon'   => 'fa-user-shield',
+                        'label'  => 'Role',
+                        'path'   => route('roles.index'),
+                        'active' => request()->is('dashboard/roles*'),
                     ],
                     [
-                        'icon' => 'fa-key',
-                        'label' => 'Permission',
-                        'path' => route('permissions.index'),
-                        'active' => request()->is('dashboard/permissions*')
+                        'icon'   => 'fa-key',
+                        'label'  => 'Permission',
+                        'path'   => route('permissions.index'),
+                        'active' => request()->is('dashboard/permissions*'),
                     ],
                 ]
-            ];
-        }
+            ],
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | INVENTARIS
+    |--------------------------------------------------------------------------
+    */
+    elseif ($user && $user->hasRole('inventaris')) {
+
+        $menuGroups = [
+
+            [
+                'title' => 'Dashboard',
+                'icon'  => 'fa-gauge',
+                'items' => [
+                    [
+                        'icon'   => 'fa-chart-line',
+                        'label'  => 'Dashboard',
+                        'path'   => route('dashboard'),
+                        'active' => request()->routeIs('dashboard'),
+                    ],
+                ]
+            ],
+
+            [
+                'title' => 'Inventory',
+                'icon'  => 'fa-boxes-stacked',
+                'items' => [
+                    [
+                        'icon'   => 'fa-tags',
+                        'label'  => 'Jenis Barang',
+                        'path'   => route('jenis-barang.index'),
+                        'active' => request()->is('dashboard/jenis-barang*'),
+                    ],
+                ]
+            ],
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | KEUANGAN
+    |--------------------------------------------------------------------------
+    */
+    elseif ($user && $user->hasRole('keuangan')) {
+
+        $menuGroups = [
+
+            [
+                'title' => 'Dashboard',
+                'icon'  => 'fa-gauge',
+                'items' => [
+                    [
+                        'icon'   => 'fa-chart-line',
+                        'label'  => 'Dashboard',
+                        'path'   => route('dashboard'),
+                        'active' => request()->routeIs('dashboard'),
+                    ],
+                ]
+            ],
+
+            [
+                'title' => 'Keuangan',
+                'icon'  => 'fa-wallet',
+                'items' => [
+                    [
+                        'icon'   => 'fa-file-invoice-dollar',
+                        'label'  => 'Laporan Keuangan',
+                        'path'   => '#',
+                        'active' => request()->is('dashboard/keuangan*'),
+                    ],
+                ]
+            ],
+        ];
     }
 @endphp
 
@@ -94,11 +166,8 @@
     <nav class="flex-1 px-4 py-5 overflow-y-auto space-y-4">
 
         @foreach($menuGroups as $group)
-            <div
-                x-data="{ open: true }"
-                class="rounded-2xl bg-white/[0.03] border border-white/5 overflow-hidden"
-            >
-                {{-- TITLE --}}
+            <div x-data="{ open: true }" class="rounded-2xl bg-white/[0.03] border border-white/5 overflow-hidden">
+
                 <button
                     @click="open = !open"
                     class="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition"
@@ -113,13 +182,10 @@
                         </span>
                     </div>
 
-                    <i
-                        class="fas fa-chevron-down text-xs text-slate-500 transition-transform duration-300"
-                        :class="open ? 'rotate-180' : ''"
-                    ></i>
+                    <i class="fas fa-chevron-down text-xs text-slate-500 transition-transform duration-300"
+                       :class="open ? 'rotate-180' : ''"></i>
                 </button>
 
-                {{-- ITEMS --}}
                 <div x-show="open" x-transition class="px-2 pb-2 space-y-1">
                     @foreach($group['items'] as $item)
                         <a
@@ -148,24 +214,4 @@
         @endforeach
 
     </nav>
-
-    {{-- FOOTER --}}
-    <div class="p-4 border-t border-white/5">
-        <div class="rounded-2xl bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/10 p-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                    <i class="fas fa-boxes-stacked text-emerald-400"></i>
-                </div>
-
-                <div>
-                    <p class="text-sm font-semibold text-white">
-                        Stock Ready
-                    </p>
-                    <p class="text-xs text-slate-400">
-                        Monitor inventory realtime
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
