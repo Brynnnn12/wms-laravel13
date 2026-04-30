@@ -6,9 +6,9 @@ use App\Http\Requests\JenisBarang\StoreJenisBarangRequest;
 use App\Http\Requests\JenisBarang\UpdateJenisBarangRequest;
 use App\Models\JenisBarang;
 use App\Services\JenisBarangService;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class JenisBarangController extends Controller
@@ -27,9 +27,9 @@ class JenisBarangController extends Controller
         $jenisBarangs = $this->service->paginate(10);
 
         $title = 'Hapus Jenis Barang!';
-        $text = "Apakah Anda yakin ingin menghapus jenis barang ini?";
-        confirmDelete($title, $text);
+        $text  = 'Apakah Anda yakin ingin menghapus jenis barang ini?';
 
+        confirmDelete($title, $text);
 
         return view('dashboard.jenis-barang.index', compact('jenisBarangs'));
     }
@@ -53,14 +53,13 @@ class JenisBarangController extends Controller
 
         toast('Jenis barang berhasil ditambahkan!', 'success');
 
-        return redirect()
-            ->route('jenis-barang.index');
+        return redirect()->route('jenis-barang.index');
     }
 
     /**
      * Display the specified resource.
      */
-    #[Authorize('view')]
+    #[Authorize('view', 'jenis_barang')]
     public function show(JenisBarang $jenis_barang): View
     {
         return view('dashboard.jenis-barang.show', compact('jenis_barang'));
@@ -69,7 +68,7 @@ class JenisBarangController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    #[Authorize('update')]
+    #[Authorize('update', 'jenis_barang')]
     public function edit(JenisBarang $jenis_barang): View
     {
         return view('dashboard.jenis-barang.edit', compact('jenis_barang'));
@@ -78,7 +77,7 @@ class JenisBarangController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[Authorize('update')]
+    #[Authorize('update', 'jenis_barang')]
     public function update(
         UpdateJenisBarangRequest $request,
         JenisBarang $jenis_barang
@@ -87,39 +86,37 @@ class JenisBarangController extends Controller
 
         toast('Jenis barang berhasil diperbarui!', 'success');
 
-        return redirect()
-            ->route('jenis-barang.index');
+        return redirect()->route('jenis-barang.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    #[Authorize('delete')]
+    #[Authorize('delete', 'jenis_barang')]
     public function destroy(JenisBarang $jenis_barang): RedirectResponse
     {
         $this->service->delete($jenis_barang);
+
         toast('Jenis barang berhasil dihapus!', 'success');
 
-        return redirect()
-            ->route('jenis-barang.index');
+        return redirect()->route('jenis-barang.index');
     }
 
     /**
      * Bulk delete selected data.
      */
-    #[Authorize('delete', JenisBarang::class)]
-    public function bulkDelete(): RedirectResponse
+    #[Authorize('deleteAny', JenisBarang::class)]
+    public function bulkDelete(Request $request): RedirectResponse
     {
-        request()->validate([
-            'ids' => ['required', 'array'],
-            'ids.*' => ['integer', 'exists:jenis_barangs,id'],
+        $validated = $request->validate([
+            'ids'   => ['required', 'array'],
+            'ids.*' => ['exists:jenis_barangs,id'],
         ]);
 
-        $deleted = $this->service->bulkDelete(request('ids'));
+        $deleted = $this->service->bulkDelete($validated['ids']);
 
         toast("{$deleted} jenis barang berhasil dihapus!", 'success');
 
-        return redirect()
-            ->route('jenis-barang.index');
+        return redirect()->route('jenis-barang.index');
     }
 }

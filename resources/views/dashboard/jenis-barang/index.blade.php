@@ -31,6 +31,7 @@
 
             {{-- TABLE --}}
             <form id="bulk-delete-form"
+                  data-bulk-delete
                   action="{{ route('jenis-barang.bulk-delete') }}"
                   method="POST">
 
@@ -56,6 +57,8 @@
 
                             <button type="button"
                                     id="bulk-delete-btn"
+                                    data-delete-button
+                                    data-confirm-message="Apakah Anda yakin ingin menghapus jenis barang yang dipilih?"
                                     class="hidden px-4 py-2 rounded-2xl bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition">
                                 <i class="fas fa-trash mr-2"></i>
                                 Hapus Terpilih
@@ -72,6 +75,7 @@
                                     <th class="px-6 py-4 text-center">
                                         <input type="checkbox"
                                                id="select-all"
+                                               data-select-all
                                                class="rounded border-slate-300 text-emerald-600">
                                     </th>
 
@@ -101,6 +105,7 @@
                                             <input type="checkbox"
                                                    name="ids[]"
                                                    value="{{ $item->id }}"
+                                                   data-checkbox
                                                    class="item-checkbox rounded border-slate-300 text-emerald-600">
                                         </td>
 
@@ -163,49 +168,6 @@
     </div>
 
     @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const selectAll = document.getElementById('select-all');
-            const checkboxes = document.querySelectorAll('.item-checkbox');
-            const bulkBtn = document.getElementById('bulk-delete-btn');
-            const form = document.getElementById('bulk-delete-form');
-
-            function refreshButton() {
-                const checked = document.querySelectorAll('.item-checkbox:checked').length;
-
-                bulkBtn.classList.toggle('hidden', checked === 0);
-            }
-
-            selectAll.addEventListener('change', function () {
-                checkboxes.forEach(cb => cb.checked = this.checked);
-                refreshButton();
-            });
-
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', () => {
-
-                    const checked = document.querySelectorAll('.item-checkbox:checked').length;
-
-                    selectAll.checked = checked === checkboxes.length;
-                    selectAll.indeterminate = checked > 0 && checked < checkboxes.length;
-
-                    refreshButton();
-                });
-            });
-
-            bulkBtn.addEventListener('click', () => {
-
-                const total = document.querySelectorAll('.item-checkbox:checked').length;
-
-                if (total === 0) return;
-
-                if (confirm(`Hapus ${total} data terpilih?`)) {
-                    form.submit();
-                }
-            });
-
-        });
-    </script>
+    <script src="{{ asset('js/bulk-delete.js') }}"></script>
     @endpush
 </x-app-layout>
