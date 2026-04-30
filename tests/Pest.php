@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,7 +47,48 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+function createUserWithRole(string|array $roles, array $attributes = []): User
 {
-    // ..
+    $user = User::factory()->create($attributes);
+
+    foreach ((array) $roles as $roleName) {
+        $role = Role::firstOrCreate(['name' => $roleName]);
+        $user->assignRole($role);
+    }
+
+    return $user;
+}
+
+function createSuperAdmin(array $attributes = []): User
+{
+    return createUserWithRole('super-admin', $attributes);
+}
+
+function createAdmin(array $attributes = []): User
+{
+    return createUserWithRole('admin', $attributes);
+}
+
+function createPermissions(array $permissions)
+{
+    return collect($permissions)->map(function ($permission) {
+        return Permission::firstOrCreate(['name' => $permission]);
+    });
+}
+
+function giveRolePermissions(string $roleName, array $permissions): void
+{
+    $role = Role::firstOrCreate(['name' => $roleName]);
+
+    foreach ($permissions as $permission) {
+        Permission::firstOrCreate(['name' => $permission]);
+    }
+
+    $role->syncPermissions($permissions);
 }

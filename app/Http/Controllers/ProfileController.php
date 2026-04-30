@@ -40,7 +40,7 @@ class ProfileController extends Controller
             toast('Terjadi kesalahan saat memperbarui profile!', 'error');
         }
 
-        return back();
+        return redirect()->route('profile.edit');
     }
 
     /**

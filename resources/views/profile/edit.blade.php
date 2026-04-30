@@ -18,7 +18,7 @@
             </div>
 
             {{-- GRID --}}
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div x-data="{ tab: 'profile' }" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
                 {{-- SIDEBAR --}}
                 <div class="space-y-6">
@@ -47,22 +47,35 @@
                         </h4>
 
                         <div class="space-y-3 text-sm">
+                            <button type="button"
+                                @click="tab = 'profile'"
+                                :class="tab === 'profile' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-700 hover:bg-slate-50'"
+                                class="w-full text-left rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition">
+                                <span class="flex items-center gap-3">
+                                    <i class="fas fa-user-circle text-emerald-600"></i>
+                                    Informasi Profil
+                                </span>
+                            </button>
 
-                            <div class="flex items-center gap-3 text-slate-700">
-                                <i class="fas fa-user-circle text-emerald-600"></i>
-                                Informasi Profil
-                            </div>
+                            <button type="button"
+                                @click="tab = 'password'"
+                                :class="tab === 'password' ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50'"
+                                class="w-full text-left rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition">
+                                <span class="flex items-center gap-3">
+                                    <i class="fas fa-lock text-blue-600"></i>
+                                    Ubah Password
+                                </span>
+                            </button>
 
-                            <div class="flex items-center gap-3 text-slate-700">
-                                <i class="fas fa-lock text-blue-600"></i>
-                                Ubah Password
-                            </div>
-
-                            <div class="flex items-center gap-3 text-slate-700">
-                                <i class="fas fa-trash text-rose-600"></i>
-                                Hapus Akun
-                            </div>
-
+                            <button type="button"
+                                @click="tab = 'delete'"
+                                :class="tab === 'delete' ? 'bg-rose-50 text-rose-700' : 'text-slate-700 hover:bg-slate-50'"
+                                class="w-full text-left rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition">
+                                <span class="flex items-center gap-3">
+                                    <i class="fas fa-trash text-rose-600"></i>
+                                    Hapus Akun
+                                </span>
+                            </button>
                         </div>
                     </div>
 
@@ -71,18 +84,15 @@
                 {{-- CONTENT --}}
                 <div class="xl:col-span-2 space-y-6">
 
-                    {{-- PROFILE --}}
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
+                    <div x-show="tab === 'profile'" x-cloak class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
                         @include('profile.partials.update-profile-information-form')
                     </div>
 
-                    {{-- PASSWORD --}}
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
+                    <div x-show="tab === 'password'" x-cloak class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8">
                         @include('profile.partials.update-password-form')
                     </div>
 
-                    {{-- DELETE --}}
-                    <div class="bg-white rounded-3xl border border-rose-200 shadow-sm p-6 md:p-8">
+                    <div x-show="tab === 'delete'" x-cloak class="bg-white rounded-3xl border border-rose-200 shadow-sm p-6 md:p-8">
                         @include('profile.partials.delete-user-form')
                     </div>
 

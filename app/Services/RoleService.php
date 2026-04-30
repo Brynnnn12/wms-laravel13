@@ -55,7 +55,6 @@ class RoleService
                 'guard_name' => $validated['guard_name'],
             ]);
 
-            // AMBIL nama permission HANYA yang guard-nya sama dengan guard role ini
             $validPermissions = Permission::whereIn('id', $validated['permissions'] ?? [])
                 ->where('guard_name', $validated['guard_name'])
                 ->pluck('name')
