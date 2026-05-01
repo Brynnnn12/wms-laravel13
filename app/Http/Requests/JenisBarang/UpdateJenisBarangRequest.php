@@ -28,8 +28,8 @@ class UpdateJenisBarangRequest extends FormRequest
                 'string',
                 'max:50',
                 'regex:/^[a-zA-Z0-9\s]+$/',
-                Rule::unique('jenis_barang', 'jenis_barang')
-                    ->ignore($jenisBarang?->id),
+                Rule::unique('jenis_barangs', 'jenis_barang')
+                    ->ignore($this->route('jenis_barang')->id),
             ],
         ];
     }
@@ -51,10 +51,10 @@ class UpdateJenisBarangRequest extends FormRequest
     {
         return [
             'jenis_barang.required' => 'Jenis barang wajib diisi.',
-            'jenis_barang.string'   => 'Jenis barang harus berupa teks.',
-            'jenis_barang.max'      => 'Jenis barang tidak boleh lebih dari 50 karakter.',
-            'jenis_barang.regex'    => 'Jenis barang hanya boleh berisi huruf, angka, dan spasi.',
-            'jenis_barang.unique'   => 'Jenis barang sudah digunakan.',
+            'jenis_barang.string' => 'Jenis barang harus berupa teks.',
+            'jenis_barang.max' => 'Jenis barang tidak boleh lebih dari 50 karakter.',
+            'jenis_barang.regex' => 'Jenis barang hanya boleh berisi huruf, angka, dan spasi.',
+            'jenis_barang.unique' => 'Jenis barang sudah digunakan.',
         ];
     }
 

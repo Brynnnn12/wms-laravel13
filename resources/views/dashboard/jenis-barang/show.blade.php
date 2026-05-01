@@ -28,7 +28,7 @@
                             Kembali
                         </a>
 
-                        <a href="{{ route('jenis-barang.edit', $jenisBarang) }}"
+                        <a href="{{ route('jenis-barang.edit', $jenis_barang) }}"
                            class="px-5 py-3 rounded-2xl bg-white text-indigo-700 font-semibold hover:scale-[1.02] transition shadow">
                             <i class="fas fa-pen mr-2"></i>
                             Edit Jenis Barang
@@ -46,7 +46,7 @@
                         <div>
                             <p class="text-sm text-slate-500">Kode Jenis</p>
                             <h3 class="text-2xl font-bold text-slate-800 mt-1">
-                                {{ $jenisBarang->kode_jenis }}
+                                {{ $jenis_barang->kode_jenis }}
                             </h3>
                         </div>
 
@@ -61,7 +61,7 @@
                         <div>
                             <p class="text-sm text-slate-500">Jenis Barang</p>
                             <h3 class="text-xl font-bold text-slate-800 mt-1">
-                                {{ $jenisBarang->jenis_barang }}
+                                {{ $jenis_barang->jenis_barang }}
                             </h3>
                         </div>
 
@@ -76,7 +76,7 @@
                         <div>
                             <p class="text-sm text-slate-500">Dibuat Pada</p>
                             <h3 class="text-lg font-bold text-slate-800 mt-1">
-                                {{ $jenisBarang->created_at->format('d M Y') }}
+                                {{ $jenis_barang->created_at->format('d M Y') }}
                             </h3>
                         </div>
 
@@ -109,14 +109,14 @@
                             <div>
                                 <p class="text-sm text-slate-500">Kode Jenis</p>
                                 <p class="font-semibold text-slate-800 mt-1">
-                                    {{ $jenisBarang->kode_jenis }}
+                                    {{ $jenis_barang->kode_jenis }}
                                 </p>
                             </div>
 
                             <div>
                                 <p class="text-sm text-slate-500">Jenis Barang</p>
                                 <p class="font-semibold text-slate-800 mt-1">
-                                    {{ $jenisBarang->jenis_barang }}
+                                    {{ $jenis_barang->jenis_barang }}
                                 </p>
                             </div>
                         </div>
@@ -138,19 +138,19 @@
                         <div>
                             <p class="text-sm text-slate-500">ID</p>
                             <p class="font-semibold text-slate-800 mt-1">
-                                {{ $jenisBarang->id }}
+                                {{ $jenis_barang->id }}
                             </p>
                         </div>
 
                         <div class="pt-5 border-t border-slate-100">
                             <p class="text-xs text-slate-400 mb-2">
                                 Dibuat:
-                                {{ $jenisBarang->created_at?->format('d M Y, H:i') }}
+                                {{ $jenis_barang->created_at?->format('d M Y, H:i') }}
                             </p>
 
                             <p class="text-xs text-slate-400">
                                 Update:
-                                {{ $jenisBarang->updated_at?->format('d M Y, H:i') }}
+                                {{ $jenis_barang->updated_at?->format('d M Y, H:i') }}
                             </p>
                         </div>
 

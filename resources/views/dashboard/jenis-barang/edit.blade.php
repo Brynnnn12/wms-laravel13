@@ -7,14 +7,14 @@
                 <p class="text-orange-100 text-sm font-medium mb-2">Jenis Barang Management</p>
                 <h1 class="text-3xl font-bold text-white">Edit Jenis Barang</h1>
                 <p class="text-orange-100 text-sm mt-2">
-                    {{ $jenisBarang->jenis_barang }}
+                    {{ $jenis_barang->jenis_barang }}
                 </p>
             </div>
 
             {{-- CONTENT --}}
             <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
 
-                <form action="{{ route('jenis-barang.update', $jenisBarang) }}" method="POST">
+                <form action="{{ route('jenis-barang.update', $jenis_barang) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -29,7 +29,7 @@
                                 </label>
 
                                 <input type="text"
-                                       value="{{ $jenisBarang->kode_jenis }}"
+                                       value="{{ $jenis_barang->kode_jenis }}"
                                        readonly
                                        class="w-full rounded-2xl border-slate-300 bg-slate-50 text-slate-500 cursor-not-allowed">
 
@@ -43,7 +43,7 @@
 
                                 <input type="text"
                                        name="jenis_barang"
-                                       value="{{ old('jenis_barang', $jenisBarang->jenis_barang) }}"
+                                        value="{{ old('jenis_barang', $jenis_barang->jenis_barang) }}"
                                        required
                                        class="w-full rounded-2xl border-slate-300 focus:border-amber-500 focus:ring-amber-500">
 

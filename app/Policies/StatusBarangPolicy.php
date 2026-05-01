@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\StatusBarang;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class StatusBarangPolicy
 {
@@ -19,7 +18,7 @@ class StatusBarangPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, StatusBarang $statusBarang): bool
+    public function view(User $user, StatusBarang $status_barang): bool
     {
         return $user->can('status barang.view');
     }
@@ -35,7 +34,7 @@ class StatusBarangPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, StatusBarang $statusBarang): bool
+    public function update(User $user, StatusBarang $status_barang): bool
     {
         return $user->can('status barang.update');
     }
@@ -43,7 +42,7 @@ class StatusBarangPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, StatusBarang $statusBarang): bool
+    public function delete(User $user, StatusBarang $status_barang): bool
     {
         return $user->can('status barang.delete');
     }
@@ -59,7 +58,7 @@ class StatusBarangPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, StatusBarang $statusBarang): bool
+    public function restore(User $user, StatusBarang $status_barang): bool
     {
         return false;
     }
@@ -67,7 +66,7 @@ class StatusBarangPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, StatusBarang $statusBarang): bool
+    public function forceDelete(User $user, StatusBarang $status_barang): bool
     {
         return false;
     }

@@ -26,8 +26,14 @@ class StatusService
 
     public function update(StatusBarang $statusBarang, array $data)
     {
-        if (isset($data['nama_status']) && $data['nama_status'] !== $statusBarang->nama_status) {
-            $this->validateUniqueNamaStatus($data['nama_status'], $statusBarang->id);
+        if (
+            isset($data['nama_status']) &&
+            $data['nama_status'] !== $statusBarang->nama_status
+        ) {
+            $this->validateUniqueNamaStatus(
+                $data['nama_status'],
+                $statusBarang->id
+            );
         }
 
         return $this->repository->update($statusBarang, $data);
@@ -35,7 +41,6 @@ class StatusService
 
     public function delete(StatusBarang $statusBarang)
     {
-        // Tambahkan logic bisnis jika ada (contoh: cek apakah masih digunakan di barang)
         return $this->repository->delete($statusBarang);
     }
 
@@ -44,8 +49,10 @@ class StatusService
         return $this->repository->bulkDelete($ids);
     }
 
-    private function validateUniqueNamaStatus(string $namaStatus, ?int $ignoreId = null)
-    {
+    private function validateUniqueNamaStatus(
+        string $namaStatus,
+        ?string $ignoreId = null
+    ): void {
         $query = StatusBarang::where('nama_status', $namaStatus);
 
         if ($ignoreId) {
@@ -53,7 +60,9 @@ class StatusService
         }
 
         if ($query->exists()) {
-            throw new \Exception('Status barang dengan nama yang sama sudah ada.');
+            throw ValidationException::withMessages([
+                'nama_status' => 'Status barang dengan nama yang sama sudah ada.',
+            ]);
         }
     }
 }

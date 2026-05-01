@@ -7,14 +7,14 @@
                 <p class="text-orange-100 text-sm font-medium mb-2">Status Barang Management</p>
                 <h1 class="text-3xl font-bold text-white">Edit Status Barang</h1>
                 <p class="text-orange-100 text-sm mt-2">
-                    {{ $statusBarang->nama_status }}
+                    {{ $status_barang->nama_status }}
                 </p>
             </div>
 
             {{-- CONTENT --}}
             <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
 
-                <form action="{{ route('status-barang.update', $statusBarang) }}" method="POST">
+                <form action="{{ route('status-barang.update', $status_barang) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -30,7 +30,7 @@
 
                                 <input type="text"
                                        name="nama_status"
-                                       value="{{ old('nama_status', $statusBarang->nama_status) }}"
+                                       value="{{ old('nama_status', $status_barang->nama_status) }}"
                                        required
                                        class="w-full rounded-2xl border-slate-300 focus:border-amber-500 focus:ring-amber-500">
 

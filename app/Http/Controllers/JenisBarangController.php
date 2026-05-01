@@ -59,7 +59,7 @@ class JenisBarangController extends Controller
     /**
      * Display the specified resource.
      */
-    #[Authorize('view', 'jenis_barang')]
+    #[Authorize('view', JenisBarang::class)]
     public function show(JenisBarang $jenis_barang): View
     {
         return view('dashboard.jenis-barang.show', compact('jenis_barang'));
@@ -68,7 +68,7 @@ class JenisBarangController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    #[Authorize('update', 'jenis_barang')]
+    #[Authorize('update', JenisBarang::class)]
     public function edit(JenisBarang $jenis_barang): View
     {
         return view('dashboard.jenis-barang.edit', compact('jenis_barang'));
@@ -77,7 +77,7 @@ class JenisBarangController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    #[Authorize('update', 'jenis_barang')]
+    #[Authorize('update', JenisBarang::class)]
     public function update(
         UpdateJenisBarangRequest $request,
         JenisBarang $jenis_barang
@@ -92,9 +92,10 @@ class JenisBarangController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    #[Authorize('delete', 'jenis_barang')]
+    #[Authorize('delete', JenisBarang::class)]
     public function destroy(JenisBarang $jenis_barang): RedirectResponse
     {
+
         $this->service->delete($jenis_barang);
 
         toast('Jenis barang berhasil dihapus!', 'success');

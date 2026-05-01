@@ -113,16 +113,12 @@
                                                     <i class="fas fa-pen text-sm"></i>
                                                 </a>
 
-                                                <form action="{{ route('permissions.destroy', $permission) }}"
-                                                      method="POST" data-confirm-delete="true">
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                            class="w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-rose-600 hover:text-white transition">
-                                                        <i class="fas fa-trash text-sm"></i>
-                                                    </button>
-                                                </form>
+                                                <button type="button"
+                                                        data-confirm-delete
+                                                        data-confirm-route="{{ route('permissions.destroy', $permission) }}"
+                                                        class="w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-rose-600 hover:text-white transition">
+                                                    <i class="fas fa-trash text-sm"></i>
+                                                </button>
 
                                             </div>
                                         </td>

@@ -20,10 +20,14 @@
 
                 if (confirmDeleteElement) {
                     event.preventDefault();
+
+                    var action = confirmDeleteElement.action || confirmDeleteElement.href || confirmDeleteElement.dataset.confirmRoute;
+                    if (!action) return;
+
                     Swal.fire({!! Session::pull('alert.delete') !!}).then(function(result) {
                         if (result.isConfirmed) {
                             var form = document.createElement('form');
-                            form.action = confirmDeleteElement.action || confirmDeleteElement.href;
+                            form.action = action;
                             form.method = 'POST';
                             form.innerHTML = `
                             @csrf
