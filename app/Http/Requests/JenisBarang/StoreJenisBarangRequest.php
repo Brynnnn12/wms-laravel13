@@ -23,7 +23,7 @@ class StoreJenisBarangRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'jenis_barang' => ['required', 'string', 'max:255'],
+            'jenis_barang' => ['required', 'string', 'max:50','regex:/^[a-zA-Z0-9\s]+$/'],
         ];
     }
 
@@ -40,7 +40,8 @@ class StoreJenisBarangRequest extends FormRequest
         return [
             'jenis_barang.required' => 'Jenis barang wajib diisi.',
             'jenis_barang.string' => 'Jenis barang harus berupa teks.',
-            'jenis_barang.max' => 'Jenis barang tidak boleh lebih dari 255 karakter.',
+            'jenis_barang.max' => 'Jenis barang tidak boleh lebih dari 50 karakter.',
+            'jenis_barang.regex' => 'Jenis barang hanya boleh berisi huruf, angka, dan spasi.',
         ];
     }
 

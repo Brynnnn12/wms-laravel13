@@ -39,11 +39,11 @@ class JenisBarangPolicy
 
     public function restore(User $user, JenisBarang $jenisBarang): bool
     {
-        return $user->can('jenis barang.restore');
+        return false;
     }
 
     public function forceDelete(User $user, JenisBarang $jenisBarang): bool
     {
-        return $user->can('jenis barang.force delete');
+        return false;
     }
 }

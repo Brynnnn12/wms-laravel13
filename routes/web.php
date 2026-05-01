@@ -38,6 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/permissions', PermissionController::class);
         Route::delete('/jenis-barang/bulk-delete', [App\Http\Controllers\JenisBarangController::class, 'bulkDelete'])->name('jenis-barang.bulk-delete');
         Route::resource('/jenis-barang', App\Http\Controllers\JenisBarangController::class);
+        Route::delete('/status-barang/bulk-delete', [App\Http\Controllers\StatusBarangController::class, 'bulkDelete'])->name('status-barang.bulk-delete');
+        Route::resource('/status-barang', App\Http\Controllers\StatusBarangController::class);
 
 
     });

@@ -25,10 +25,10 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
-        //buat user role super admin
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'bryankurniaakbar12@gmail.com',
+
         ])->assignRole($superAdmin);
 
         //buat user role admin
@@ -49,8 +49,10 @@ class RoleSeeder extends Seeder
             'jenis barang.create',
             'jenis barang.update',
             'jenis barang.delete',
-            'jenis barang.restore',
-            'jenis barang.force delete',
+            'status barang.view',
+            'status barang.create',
+            'status barang.update',
+            'status barang.delete',
         ]);
 
         app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();

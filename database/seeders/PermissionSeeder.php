@@ -17,8 +17,10 @@ class PermissionSeeder extends Seeder
             'jenis barang.create',
             'jenis barang.update',
             'jenis barang.delete',
-            'jenis barang.restore',
-            'jenis barang.force delete',
+            'status barang.view',
+            'status barang.create',
+            'status barang.update',
+            'status barang.delete',
         ];
 
         foreach ($permissions as $permission) {

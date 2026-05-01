@@ -36,6 +36,12 @@
                         'path'   => route('jenis-barang.index'),
                         'active' => request()->is('dashboard/jenis-barang*'),
                     ],
+                    [
+                        'icon'   => 'fa-tag',
+                        'label'  => 'Status Barang',
+                        'path'   => route('status-barang.index'),
+                        'active' => request()->is('dashboard/status-barang*'),
+                    ],
                 ]
             ],
 

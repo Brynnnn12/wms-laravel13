@@ -12,18 +12,18 @@
                             </p>
 
                             <h1 class="text-2xl md:text-3xl font-bold text-white">
-                                Manajemen Jenis Barang
+                                Manajemen Status Barang
                             </h1>
 
                             <p class="text-emerald-100 text-sm mt-2">
-                                Kelola data jenis barang pada sistem inventory.
+                                Kelola data status barang pada sistem inventory.
                             </p>
                         </div>
 
-                        <a href="{{ route('jenis-barang.create') }}"
+                        <a href="{{ route('status-barang.create') }}"
                            class="inline-flex items-center px-5 py-3 rounded-2xl bg-white text-emerald-700 font-semibold text-sm shadow-lg hover:scale-[1.02] transition">
                             <i class="fas fa-plus mr-2"></i>
-                            Tambah Jenis Barang
+                            Tambah Status Barang
                         </a>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
             {{-- TABLE --}}
             <form id="bulk-delete-form"
                   data-bulk-delete
-                  action="{{ route('jenis-barang.bulk-delete') }}"
+                  action="{{ route('status-barang.bulk-delete') }}"
                   method="POST">
 
                 @csrf
@@ -45,11 +45,11 @@
 
                         <div>
                             <h2 class="font-bold text-slate-800 text-lg">
-                                Data Jenis Barang
+                                Data Status Barang
                             </h2>
 
                             <p class="text-sm text-slate-500">
-                                Daftar seluruh jenis barang yang tersedia.
+                                Daftar seluruh status barang yang tersedia.
                             </p>
                         </div>
 
@@ -58,7 +58,7 @@
                             <button type="button"
                                     id="bulk-delete-btn"
                                     data-delete-button
-                                    data-confirm-message="Apakah Anda yakin ingin menghapus jenis barang yang dipilih?"
+                                    data-confirm-message="Apakah Anda yakin ingin menghapus status barang yang dipilih?"
                                     class="hidden px-4 py-2 rounded-2xl bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition">
                                 <i class="fas fa-trash mr-2"></i>
                                 Hapus Terpilih
@@ -84,11 +84,7 @@
                                     </th>
 
                                     <th class="px-6 py-4 text-left text-xs font-bold uppercase text-slate-500">
-                                        Kode
-                                    </th>
-
-                                    <th class="px-6 py-4 text-left text-xs font-bold uppercase text-slate-500">
-                                        Jenis Barang
+                                        Nama Status
                                     </th>
 
                                     <th class="px-6 py-4 text-center text-xs font-bold uppercase text-slate-500">
@@ -98,7 +94,7 @@
                             </thead>
 
                             <tbody class="divide-y divide-slate-100">
-                                @forelse($jenisBarangs as $index => $item)
+                                @forelse($statusBarangs as $index => $item)
                                     <tr class="hover:bg-slate-50">
 
                                         <td class="px-6 py-4 text-center">
@@ -110,26 +106,22 @@
                                         </td>
 
                                         <td class="px-6 py-4 text-sm">
-                                            {{ $jenisBarangs->firstItem() + $index }}
-                                        </td>
-
-                                        <td class="px-6 py-4 font-semibold">
-                                            {{ $item->kode_jenis }}
+                                            {{ $statusBarangs->firstItem() + $index }}
                                         </td>
 
                                         <td class="px-6 py-4">
-                                            {{ $item->jenis_barang }}
+                                            {{ $item->nama_status }}
                                         </td>
 
                                         <td class="px-6 py-4">
                                             <div class="flex justify-center gap-2">
 
-                                                <a href="{{ route('jenis-barang.edit', $item) }}"
+                                                <a href="{{ route('status-barang.edit', $item) }}"
                                                    class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-amber-500 hover:text-white transition">
                                                     <i class="fas fa-pen text-sm"></i>
                                                 </a>
 
-                                                <form action="{{ route('jenis-barang.destroy', $item) }}"
+                                                <form action="{{ route('status-barang.destroy', $item) }}"
                                                       method="POST" data-confirm-delete="true">
                                                     @csrf
                                                     @method('DELETE')
@@ -147,7 +139,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-10 text-slate-500">
+                                        <td colspan="4" class="text-center py-10 text-slate-500">
                                             Belum ada data.
                                         </td>
                                     </tr>
@@ -158,7 +150,7 @@
 
                     {{-- PAGINATION --}}
                     <div class="px-6 py-5 border-t border-slate-100">
-                        {{ $jenisBarangs->links() }}
+                        {{ $statusBarangs->links() }}
                     </div>
 
                 </div>
@@ -166,6 +158,5 @@
 
         </div>
     </div>
-
 
 </x-app-layout>
