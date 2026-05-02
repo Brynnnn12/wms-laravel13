@@ -42,13 +42,25 @@
                         'path'   => route('status-barang.index'),
                         'active' => request()->is('dashboard/status-barang*'),
                     ],
+                    [
+                        'icon'   => 'fa-clipboard-list',
+                        'label'  => 'Kondisi Barang',
+                        'path'   => route('kondisi-barang.index'),
+                        'active' => request()->is('dashboard/kondisi-barang*'),
+                    ],
                 ]
             ],
 
             [
-                'title' => 'Hak Akses',
+                'title' => 'Pengguna & Akses',
                 'icon'  => 'fa-shield-halved',
                 'items' => [
+                    [
+                        'icon'   => 'fa-users',
+                        'label'  => 'User',
+                        'path'   => route('users.index'),
+                        'active' => request()->is('dashboard/users*'),
+                    ],
                     [
                         'icon'   => 'fa-user-shield',
                         'label'  => 'Role',

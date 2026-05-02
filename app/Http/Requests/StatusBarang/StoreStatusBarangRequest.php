@@ -12,7 +12,7 @@ class StoreStatusBarangRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('status barang.create');
+        return true;
     }
 
     /**

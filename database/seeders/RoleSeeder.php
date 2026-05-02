@@ -28,6 +28,7 @@ class RoleSeeder extends Seeder
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'bryankurniaakbar12@gmail.com',
+            'is_active' => true,
 
         ])->assignRole($superAdmin);
 

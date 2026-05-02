@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('name', 60);
             $table->string('email')->unique();
+            $table->boolean('is_active')->default(true)->index();
             $table->string('google_id')->nullable()->unique();
             $table->text('google_token')->nullable();
             $table->text('google_refresh_token')->nullable();

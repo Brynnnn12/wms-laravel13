@@ -14,7 +14,7 @@ class UpdateStatusBarangRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('status barang.update');
+        return true;
     }
 
     /**
