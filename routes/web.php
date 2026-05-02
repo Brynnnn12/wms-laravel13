@@ -50,6 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/lokasi-penyimpanan/bulk-delete', [App\Http\Controllers\LokasiPenyimpananController::class, 'bulkDelete'])->name('lokasi-penyimpanan.bulk-delete');
         Route::resource('/lokasi-penyimpanan', App\Http\Controllers\LokasiPenyimpananController::class);
 
+        Route::delete('/nama-ruang/bulk-delete', [App\Http\Controllers\NamaRuangController::class, 'bulkDelete'])->name('nama-ruang.bulk-delete');
+        Route::resource('/nama-ruang', App\Http\Controllers\NamaRuangController::class);
+
 
     });
 });

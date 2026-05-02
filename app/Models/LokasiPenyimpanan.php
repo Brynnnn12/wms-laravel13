@@ -12,4 +12,9 @@ class LokasiPenyimpanan extends Model
 {
     /** @use HasFactory<\Database\Factories\LokasiPenyimpananFactory> */
     use HasFactory, HasUuids;
+
+    public function namaRuang()
+    {
+        return $this->hasMany(NamaRuang::class);
+    }
 }

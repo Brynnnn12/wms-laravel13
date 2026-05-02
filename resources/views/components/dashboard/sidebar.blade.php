@@ -53,7 +53,13 @@
                         'label'  => 'Lokasi Penyimpanan',
                         'path'   => route('lokasi-penyimpanan.index'),
                         'active' => request()->is('dashboard/lokasi-penyimpanan*'),
-                    ]
+                    ],
+                    [
+                        'icon'   => 'fa-door-open',
+                        'label'  => 'Nama Ruangan',
+                        'path'   => route('nama-ruang.index'),
+                        'active' => request()->is('dashboard/nama-ruang*'),
+                    ],
                 ]
             ],
 
