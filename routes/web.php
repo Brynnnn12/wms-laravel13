@@ -47,8 +47,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/users/bulk-delete', [App\Http\Controllers\UserController::class, 'bulkDelete'])->name('users.bulk-delete');
         Route::resource('/users', App\Http\Controllers\UserController::class);
 
+        Route::delete('/lokasi-penyimpanan/bulk-delete', [App\Http\Controllers\LokasiPenyimpananController::class, 'bulkDelete'])->name('lokasi-penyimpanan.bulk-delete');
+        Route::resource('/lokasi-penyimpanan', App\Http\Controllers\LokasiPenyimpananController::class);
+
 
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

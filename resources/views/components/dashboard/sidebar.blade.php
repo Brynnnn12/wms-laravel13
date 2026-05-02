@@ -48,6 +48,12 @@
                         'path'   => route('kondisi-barang.index'),
                         'active' => request()->is('dashboard/kondisi-barang*'),
                     ],
+                    [
+                        'icon'   => 'fa-boxes-stacked',
+                        'label'  => 'Lokasi Penyimpanan',
+                        'path'   => route('lokasi-penyimpanan.index'),
+                        'active' => request()->is('dashboard/lokasi-penyimpanan*'),
+                    ]
                 ]
             ],
 

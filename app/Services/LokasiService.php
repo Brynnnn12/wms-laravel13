@@ -20,11 +20,7 @@ class LokasiService
 
     public function create(array $data): LokasiPenyimpanan
     {
-        return DB::transaction(function () use ($data) {
-            $data['kode_lokasi'] = $this->generateKodeLokasi();
-
-            return $this->repository->create($data);
-        });
+        return $this->repository->create($data);
     }
 
     public function update(
@@ -45,25 +41,5 @@ class LokasiService
         return $this->repository->bulkDelete($ids);
     }
 
-    private function generateKodeLokasi(): string
-    {
-        $year = now()->format('Y');
 
-        $latest = LokasiPenyimpanan::query()
-            ->whereYear('created_at', $year)
-            ->where('kode_lokasi', 'like', "LOK-$year-%")
-            ->latest('id')
-            ->first();
-
-        if (! $latest) {
-            return "LOK-$year-001";
-        }
-
-        preg_match('/(\d+)$/', $latest->kode_lokasi, $matches);
-
-        $lastNumber = isset($matches[1]) ? (int) $matches[1] : 0;
-        $nextNumber = $lastNumber + 1;
-
-        return 'LOK-' . $year . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-    }
 }
