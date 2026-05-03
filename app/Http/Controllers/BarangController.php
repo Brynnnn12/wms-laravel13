@@ -107,6 +107,12 @@ class BarangController extends Controller
         return redirect()->route('barang.index');
     }
 
+    public function cetakLabel(Barang $barang)
+    {
+        $barang->load(['namaRuang.lokasiPenyimpanan']);
+        return view('dashboard.barang.cetak-label', compact('barang'));
+    }
+
     /**
      * Method bantuan untuk mengambil data master agar tidak duplikasi kode
      */

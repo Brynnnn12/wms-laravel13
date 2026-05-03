@@ -24,7 +24,7 @@ class BarangService
 
     public function create(array $data) : Barang
     {
-        $data['kode_barang'] = 'BRG-' . str_pad($this->repository->model->count() + 1, 4, '0', STR_PAD_LEFT);
+        $data['kode_barang'] = $this->generateKodeBarang();
         $data['harga_total'] = $data['harga_satuan'] * $data['jml_barang'];
         return $this->repository->create($data);
     }
@@ -48,5 +48,29 @@ class BarangService
     public function bulkDelete(array $ids) : int
     {
         return $this->repository->bulkDelete($ids);
+    }
+
+    private function generateKodeBarang(): string
+    {
+        $year = now()->format('Y');
+
+        // Mencari kode terakhir di tahun yang sama
+        $latest = Barang::query()
+            ->whereYear('created_at', $year)
+            ->where('kode_barang', 'like', "BRG-$year-%")
+            ->latest('id')
+            ->first();
+
+        if (! $latest) {
+            return "BRG-$year-0001";
+        }
+
+        // Mengambil angka urut terakhir menggunakan regex
+        preg_match('/(\d+)$/', $latest->kode_barang, $matches);
+
+        $lastNumber = isset($matches[1]) ? (int) $matches[1] : 0;
+        $nextNumber = $lastNumber + 1;
+
+        return "BRG-$year-" . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }

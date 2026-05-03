@@ -219,6 +219,12 @@
                                                     <i class="fas fa-eye text-sm"></i>
                                                 </a>
 
+                                                <a href="{{ route('barang.cetak-label', $item) }}"
+                                                   target="_blank"
+                                                   class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-purple-500 hover:text-white transition">
+                                                    <i class="fas fa-print text-sm"></i>
+                                                </a>
+
                                                 <a href="{{ route('barang.edit', $item) }}"
                                                    class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-amber-500 hover:text-white transition">
                                                     <i class="fas fa-pen text-sm"></i>
