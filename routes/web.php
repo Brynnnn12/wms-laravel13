@@ -53,8 +53,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/nama-ruang/bulk-delete', [App\Http\Controllers\NamaRuangController::class, 'bulkDelete'])->name('nama-ruang.bulk-delete');
         Route::resource('/nama-ruang', App\Http\Controllers\NamaRuangController::class);
 
+        Route::delete('/barang/bulk-delete', [App\Http\Controllers\BarangController::class, 'bulkDelete'])->name('barang.bulk-delete');
+        Route::resource('/barang', App\Http\Controllers\BarangController::class);
 
     });
 });
+
 
 require __DIR__ . '/auth.php';

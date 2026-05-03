@@ -37,6 +37,10 @@ class PermissionSeeder extends Seeder
             'ruangan.create',
             'ruangan.update',
             'ruangan.delete',
+            'barang.view',
+            'barang.create',
+            'barang.update',
+            'barang.delete',
         ];
 
         foreach ($permissions as $permission) {

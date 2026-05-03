@@ -17,4 +17,9 @@ class NamaRuang extends Model
     {
         return $this->belongsTo(LokasiPenyimpanan::class);
     }
+
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'nama_ruang_id');
+    }
 }

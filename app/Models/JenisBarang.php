@@ -12,4 +12,9 @@ class JenisBarang extends Model
 {
     /** @use HasFactory<\Database\Factories\JenisBarangFactory> */
     use HasFactory ,HasUuids;
+
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'jenis_barang_id');
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NamaRuang;
 use App\Http\Requests\StoreNamaRuangRequest;
 use App\Http\Requests\UpdateNamaRuangRequest;
+use App\Models\LokasiPenyimpanan;
 use App\Services\RuanganService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -110,5 +111,11 @@ class NamaRuangController extends Controller
         toast("$deletedCount ruangan berhasil dihapus!", 'success');
 
         return redirect()->route('nama-ruang.index');
+    }
+
+    public function getByLokasi(LokasiPenyimpanan $lokasi): \Illuminate\Http\JsonResponse
+    {
+        $ruangan = NamaRuang::where('lokasi_penyimpanan_id', $lokasi->id)->get(['id', 'nama_ruang']);
+        return response()->json($ruangan);
     }
 }

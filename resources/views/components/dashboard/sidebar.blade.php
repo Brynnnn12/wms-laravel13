@@ -60,6 +60,14 @@
                         'path'   => route('nama-ruang.index'),
                         'active' => request()->is('dashboard/nama-ruang*'),
                     ],
+
+                        [
+                            'icon'   => 'fa-box',
+                            'label'  => 'Barang',
+                            'path'   => route('barang.index'),
+                            'active' => request()->is('dashboard/barang*'),
+                        ]
+
                 ]
             ],
 

@@ -13,5 +13,9 @@ class StatusBarang extends Model
     /** @use HasFactory<\Database\Factories\StatusBarangFactory> */
     use HasFactory,HasUuids;
 
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'status_barang_id');
+    }
 
 }

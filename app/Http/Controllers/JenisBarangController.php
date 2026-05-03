@@ -27,7 +27,7 @@ class JenisBarangController extends Controller
         $jenisBarangs = $this->service->paginate(10);
 
         $title = 'Hapus Jenis Barang!';
-        $text  = 'Apakah Anda yakin ingin menghapus jenis barang ini?';
+        $text = 'Apakah Anda yakin ingin menghapus jenis barang ini?';
 
         confirmDelete($title, $text);
 
@@ -96,9 +96,17 @@ class JenisBarangController extends Controller
     public function destroy(JenisBarang $jenis_barang): RedirectResponse
     {
 
-        $this->service->delete($jenis_barang);
-
-        toast('Jenis barang berhasil dihapus!', 'success');
+        try {
+            $this->service->delete($jenis_barang);
+            toast('Jenis barang berhasil dihapus!', 'success');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Cek jika errornya adalah foreign key (code 23000)
+            if ($e->getCode() == "23000") {
+                toast('Gagal menghapus! Data ini masih digunakan oleh barang lain.', 'error');
+            } else {
+                toast('Terjadi kesalahan sistem.', 'error');
+            }
+        }
 
         return redirect()->route('jenis-barang.index');
     }
@@ -107,17 +115,45 @@ class JenisBarangController extends Controller
      * Bulk delete selected data.
      */
     #[Authorize('deleteAny', JenisBarang::class)]
-    public function bulkDelete(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'ids'   => ['required', 'array'],
-            'ids.*' => ['exists:jenis_barangs,id'],
-        ]);
+public function bulkDelete(Request $request): RedirectResponse
+{
+    $validated = $request->validate([
+        'ids' => ['required', 'array'],
+        'ids.*' => ['exists:jenis_barangs,id'],
+    ]);
 
-        $deleted = $this->service->bulkDelete($validated['ids']);
+    $successCount = 0;
+    $failedItems = [];
 
-        toast("{$deleted} jenis barang berhasil dihapus!", 'success');
-
-        return redirect()->route('jenis-barang.index');
+    foreach ($validated['ids'] as $id) {
+        try {
+            // Kita cari datanya terlebih dahulu untuk mendapatkan namanya
+            $item = \App\Models\JenisBarang::find($id);
+            if ($item) {
+                $this->service->delete($item);
+                $successCount++;
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == "23000") {
+                // Simpan nama barang yang gagal dihapus ke dalam array
+                $failedItems[] = $item->jenis_barang;
+            } else {
+                toast('Terjadi kesalahan sistem pada item: ' . $item->jenis_barang, 'error');
+            }
+        }
     }
+
+    // Tampilkan pesan sukses jika ada yang terhapus
+    if ($successCount > 0) {
+        toast("$successCount jenis barang berhasil dihapus!", 'success');
+    }
+
+    // Tampilkan pesan error spesifik jika ada yang gagal
+    if (count($failedItems) > 0) {
+        $listNama = implode(', ', $failedItems);
+        toast("Gagal menghapus: ($listNama) karena masih digunakan oleh barang lain.", 'error');
+    }
+
+    return redirect()->route('jenis-barang.index');
+}
 }
