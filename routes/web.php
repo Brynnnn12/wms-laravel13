@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\StokOpnameController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/barang/bulk-delete', [App\Http\Controllers\BarangController::class, 'bulkDelete'])->name('barang.bulk-delete');
         Route::resource('/barang', App\Http\Controllers\BarangController::class);
         Route::get('/barang/{barang}/cetak-label', [App\Http\Controllers\BarangController::class, 'cetakLabel'])->name('barang.cetak-label');
+
+        Route::get('/stok-opnames/barang-by-ruang', [App\Http\Controllers\StokOpnameController::class, 'getBarangByRuang'])->name('stok-opnames.barang-by-ruang');
+        Route::resource('/stok-opnames', App\Http\Controllers\StokOpnameController::class)->only(['index', 'create', 'store', 'show']);
 
     });
 });
