@@ -60,7 +60,7 @@ class StokOpnameController extends Controller
         }
     }
 
-    #[Authorize('view', StokOpname::class)]
+    #[Authorize('view', 'stok-opname')]
     public function show(StokOpname $stokOpname): View
     {
 

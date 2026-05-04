@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\Penyesuaian;
 use App\Models\StokOpname;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class StokOpnameRepository
 {
@@ -22,8 +23,16 @@ class StokOpnameRepository
 
     public function getAll(int $perPage = 15, array $filters = [])
     {
-        return StokOpname::query()
-            ->with(['user', 'namaRuang', 'penyesuaian'])
+        $query = StokOpname::query()
+            ->with(['user', 'namaRuang', 'penyesuaian']);
+
+        // ✅ LOGIKA POLICY: Jika bukan super-admin, hanya ambil data milik sendiri
+        // Ini memastikan user Inventaris tidak melihat daftar opname orang lain
+        if (!Auth::user()->hasRole('super-admin')) {
+            $query->where('user_id', Auth::id());
+        }
+
+        return $query
             // Filter Ruang
             ->when($filters['ruang_id'] ?? null, function ($query, $ruangId) {
                 $query->where('nama_ruang_id', $ruangId);
@@ -44,11 +53,12 @@ class StokOpnameRepository
             })
             ->latest()
             ->paginate($perPage)
-            ->withQueryString(); // Agar link pagination tidak hilang saat difilter
+            ->withQueryString();
     }
 
     public function getBarangByRuang(string $ruangId): Collection
     {
+        // Tetap seperti ini, sudah benar untuk menyuplai "Kamus Barang" ke Frontend
         return Barang::where('nama_ruang_id', $ruangId)
             ->select('id', 'kode_barang', 'nama_barang', 'jml_barang')
             ->get();
@@ -64,15 +74,12 @@ class StokOpnameRepository
         return Penyesuaian::create($data);
     }
 
-    public function getPenyesuaianByStokOpname(string $stokOpnameId): Collection
-    {
-        return Penyesuaian::where('stok_opname_id', $stokOpnameId)
-            ->with(['barang', 'user'])
-            ->get();
-    }
-
     public function updateBarangStock(string $barangId, int $qtyFisik): void
     {
-        Barang::where('id', $barangId)->update(['jml_barang' => $qtyFisik]);
+        // Menggunakan update pada instance model agar trigger observer (jika ada) tetap jalan
+        $barang = Barang::find($barangId);
+        if ($barang) {
+            $barang->update(['jml_barang' => $qtyFisik]);
+        }
     }
 }
