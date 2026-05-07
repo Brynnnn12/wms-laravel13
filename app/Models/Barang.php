@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'kondisi_barang_id',
     'nama_ruang_id',
     'tahun_anggaran',
+    'tanggal_perolehan',
 ])]
 class Barang extends Model
 {

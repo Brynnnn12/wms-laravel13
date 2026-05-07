@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->foreignUuid('nama_ruang_id')->nullable()->constrained()->nullOnDelete();
 
             $table->year('tahun_anggaran')->nullable();
+            $table->date('tanggal_perolehan')->nullable();
 
             $table->timestamps();
         });

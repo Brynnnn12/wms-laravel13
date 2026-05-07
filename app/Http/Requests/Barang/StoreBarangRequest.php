@@ -34,6 +34,7 @@ class StoreBarangRequest extends FormRequest
             'kondisi_barang_id' => ['required', 'exists:kondisi_barangs,id'],
             'nama_ruang_id' => ['required', 'exists:nama_ruangs,id'],
             'tahun_anggaran' => ['nullable', 'integer', 'digits:4', 'min:1900', 'max:' . (date('Y') + 1)],
+
         ];
     }
 
