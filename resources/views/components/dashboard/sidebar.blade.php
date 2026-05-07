@@ -94,6 +94,7 @@
                 'items' => [
                     $menu('fa-box', 'Barang', route('barang.index'), request()->is('dashboard/barang*')),
                     $menu('fa-tags', 'Jenis Barang', route('jenis-barang.index'), request()->is('dashboard/jenis-barang*')),
+                    $menu('fa-balance-scale', 'Penyesuaian Stok', route('penyesuaians.index'), request()->is('dashboard/penyesuaian*')),
                 ]
             ],
         ];
@@ -125,6 +126,7 @@
                 'title' => 'Keuangan',
                 'icon'  => 'fa-wallet',
                 'items' => [
+                    $menu('fa-clipboard', 'Stok Opname', route('stok-opnames.index'), request()->is('dashboard/stok-opname*')),
                     $menu('fa-chart-line', 'Penyusutan Aset', route('penyusutans.index'), request()->is('dashboard/penyusutans*')),
                     $menu('fa-file-invoice-dollar', 'Laporan Keuangan', '#', false),
                 ]

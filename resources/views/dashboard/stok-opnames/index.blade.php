@@ -119,14 +119,6 @@
                                     Ruang
                                 </th>
 
-                                <th class="px-6 py-4 text-center text-xs font-bold uppercase text-slate-500">
-                                    Total Items
-                                </th>
-
-                                <th class="px-6 py-4 text-center text-xs font-bold uppercase text-slate-500">
-                                    Ada Selisih
-                                </th>
-
                                 <th class="px-6 py-4 text-left text-xs font-bold uppercase text-slate-500">
                                     Dibuat Oleh
                                 </th>
@@ -161,30 +153,6 @@
                                             class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
                                             {{ $opname->namaRuang->nama_ruang ?? '-' }}
                                         </span>
-                                    </td>
-
-                                    <td class="px-6 py-4 text-center">
-                                        <span
-                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-slate-100 text-slate-700">
-                                            {{ $opname->penyesuaian->count() }}
-                                        </span>
-                                    </td>
-
-                                    <td class="px-6 py-4 text-center">
-                                        @php
-                                            $selisihCount = $opname->penyesuaian->count();
-                                        @endphp
-                                        @if ($selisihCount > 0)
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-rose-100 text-rose-700">
-                                                {{ $selisihCount }}
-                                            </span>
-                                        @else
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700">
-                                                ✓ Sesuai
-                                            </span>
-                                        @endif
                                     </td>
 
                                     <td class="px-6 py-4 text-sm">

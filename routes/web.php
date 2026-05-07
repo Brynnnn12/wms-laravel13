@@ -62,6 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/stok-opnames/barang-by-ruang', [App\Http\Controllers\StokOpnameController::class, 'getBarangByRuang'])->name('stok-opnames.barang-by-ruang');
         Route::resource('/stok-opnames', App\Http\Controllers\StokOpnameController::class)->only(['index', 'create', 'store', 'show']);
 
+        Route::resource('/penyesuaians', App\Http\Controllers\PenyesuaianController::class);
+
         Route::get('/penyusutans', [PenyusutanController::class, 'index'])->name('penyusutans.index');
         Route::post('/penyusutans/generate', [PenyusutanController::class, 'generate'])->name('penyusutans.generate');
 

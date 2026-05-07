@@ -63,8 +63,7 @@ class StokOpnameController extends Controller
     #[Authorize('view', 'stok-opname')]
     public function show(StokOpname $stokOpname): View
     {
-
-        $stokOpname->load(['user', 'namaRuang', 'penyesuaian.barang']);
+        $stokOpname->load(['user', 'namaRuang', 'penyesuaian.barang', 'penyesuaian.user']);
 
         return view('dashboard.stok-opnames.show', [
             'stokOpname' => $stokOpname,
@@ -77,6 +76,19 @@ public function getBarangByRuang(Request $request): JsonResponse
     $this->authorize('create', StokOpname::class);
 
     $ruangId = $request->query('ruang_id');
+    $stokOpnameId = $request->query('stok_opname_id');
+
+    if ($stokOpnameId) {
+        // Jika ada stok_opname_id, ambil ruang dari stok opname tersebut
+        $stokOpname = StokOpname::find($stokOpnameId);
+        if (!$stokOpname) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Stok opname tidak ditemukan'
+            ], 404);
+        }
+        $ruangId = $stokOpname->nama_ruang_id;
+    }
 
     if (!$ruangId) {
         return response()->json([

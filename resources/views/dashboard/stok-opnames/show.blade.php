@@ -25,7 +25,7 @@
             <div class="space-y-6">
 
                 {{-- INFO CARD --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     {{-- Created By --}}
                     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
@@ -44,20 +44,11 @@
                         </p>
                     </div>
 
-                    {{-- Total Barang --}}
+                    {{-- Ruang --}}
                     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-                        <p class="text-slate-600 text-sm font-medium">Total Barang Dicek</p>
-                        <p class="text-xl font-bold text-blue-600 mt-1">{{ $stokOpname->penyesuaian->count() }}</p>
-                        <p class="text-xs text-slate-500 mt-1">Item dengan selisih</p>
-                    </div>
-
-                    {{-- Total Selisih --}}
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-                        <p class="text-slate-600 text-sm font-medium">Total Selisih</p>
-                        <p class="text-xl font-bold text-rose-600 mt-1">
-                            {{ abs($stokOpname->penyesuaian->sum('selisih')) }}
-                        </p>
-                        <p class="text-xs text-slate-500 mt-1">Unit barang</p>
+                        <p class="text-slate-600 text-sm font-medium">Ruang</p>
+                        <p class="text-xl font-bold text-blue-600 mt-1">{{ $stokOpname->namaRuang->nama_ruang ?? '-' }}</p>
+                        <p class="text-xs text-slate-500 mt-1">Lokasi pengecekan</p>
                     </div>
 
                 </div>
@@ -70,167 +61,141 @@
                     </div>
                 @endif
 
-                {{-- DETAIL PENYESUAIAN --}}
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-
-                    <div class="p-6 md:p-8 border-b border-slate-200">
-                        <h2 class="text-lg font-semibold text-slate-900">Detail Penyesuaian Stok</h2>
-                        <p class="text-slate-600 text-sm mt-1">Daftar barang yang terdapat selisih antara stok sistem dan
-                            stok fisik</p>
+                {{-- PENYESUAIAN SECTION --}}
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-lg font-semibold text-slate-900">Penyesuaian Stok</h2>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Daftar penyesuaian yang telah dilakukan berdasarkan hasil opname ini
+                            </p>
+                        </div>
+                        <div class="flex gap-3">
+                            @can('create', App\Models\Penyesuaian::class)
+                                @if($stokOpname->penyesuaian->isEmpty())
+                                    <a href="{{ route('penyesuaians.create') }}"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition shadow">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Buat Penyesuaian
+                                    </a>
+                                @else
+                                    <a href="{{ route('penyesuaians.show', $stokOpname->penyesuaian->first()) }}"
+                                        class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-xl hover:bg-emerald-700 transition shadow">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        Lihat Penyesuaian
+                                    </a>
+                                    @can('update', App\Models\Penyesuaian::class)
+                                        <a href="{{ route('penyesuaians.edit', $stokOpname->penyesuaian->first()) }}"
+                                            class="inline-flex items-center px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition shadow">
+                                            <i class="fas fa-edit mr-2"></i>
+                                            Edit Penyesuaian
+                                        </a>
+                                    @endcan
+                                @endif
+                            @endcan
+                        </div>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        @if ($stokOpname->penyesuaian->count() > 0)
-                            <table class="w-full text-sm">
-                                <thead>
-                                    <tr class="bg-slate-100 border-b border-slate-200">
-                                        <th class="px-6 py-3 text-left font-semibold text-slate-700">#</th>
-                                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Nama Barang</th>
-                                        <th class="px-6 py-3 text-center font-semibold text-slate-700 w-28">Stok
-                                            Sistem</th>
-                                        <th class="px-6 py-3 text-center font-semibold text-slate-700 w-28">Stok Fisik
-                                        </th>
-                                        <th class="px-6 py-3 text-center font-semibold text-slate-700 w-20">Selisih</th>
-                                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Keterangan</th>
-                                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Dicatat Oleh</th>
+                    @if($stokOpname->penyesuaian->isNotEmpty())
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Barang</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Qty Sistem</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Qty Fisik</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Selisih</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Disesuaikan Oleh</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tanggal</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @forelse ($stokOpname->penyesuaian as $index => $penyesuaian)
-                                        <tr
-                                            class="border-b border-slate-100 hover:bg-slate-50 transition {{ $penyesuaian->selisih != 0 ? 'bg-rose-50' : '' }}">
-                                            <td class="px-6 py-4 text-slate-700 font-medium">{{ $index + 1 }}</td>
-
-                                            <td class="px-6 py-4">
-                                                <p class="font-medium text-slate-900">{{ $penyesuaian->barang->nama_barang }}
-                                                </p>
-                                                <p class="text-xs text-slate-500">{{ $penyesuaian->barang->kode_barang }}
-                                                </p>
+                                <tbody class="bg-white divide-y divide-slate-200">
+                                    @foreach($stokOpname->penyesuaian as $penyesuaian)
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-slate-900">{{ $penyesuaian->barang->nama_barang }}</div>
+                                                <div class="text-sm text-slate-500">{{ $penyesuaian->barang->kode_barang }}</div>
                                             </td>
-
-                                            <td class="px-6 py-4 text-center">
-                                                <span
-                                                    class="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold">
-                                                    {{ $penyesuaian->qty_sistem }}
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                                                {{ number_format($penyesuaian->qty_sistem) }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                                                {{ number_format($penyesuaian->qty_fisik) }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                                                    {{ $penyesuaian->selisih < 0 ? 'bg-red-100 text-red-800' : ($penyesuaian->selisih > 0 ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800') }}">
+                                                    {{ $penyesuaian->selisih > 0 ? '+' : '' }}{{ number_format($penyesuaian->selisih) }}
                                                 </span>
                                             </td>
-
-                                            <td class="px-6 py-4 text-center">
-                                                <span
-                                                    class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold">
-                                                    {{ $penyesuaian->qty_fisik }}
-                                                </span>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                @if($penyesuaian->selisih < 0)
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                                        <i class="fas fa-minus-circle mr-1"></i> Kurang
+                                                    </span>
+                                                @elseif($penyesuaian->selisih > 0)
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                        <i class="fas fa-plus-circle mr-1"></i> Lebih
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-800">
+                                                        <i class="fas fa-check-circle mr-1"></i> Sesuai
+                                                    </span>
+                                                @endif
                                             </td>
-
-                                            <td class="px-6 py-4 text-center font-bold">
-                                                <span
-                                                    class="inline-block px-3 py-1 rounded-full {{ $penyesuaian->selisih > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
-                                                    {{ $penyesuaian->selisih > 0 ? '+' : '' }}{{ $penyesuaian->selisih }}
-                                                </span>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                                                {{ $penyesuaian->user->name }}
                                             </td>
-
-                                            <td class="px-6 py-4 text-slate-700">
-                                                {{ $penyesuaian->keterangan ?? '-' }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-slate-700 text-xs">
-                                                <p class="font-medium">{{ $penyesuaian->user->name ?? '-' }}</p>
-                                                <p class="text-slate-500">{{ $penyesuaian->created_at->format('d M Y') }}
-                                                </p>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                {{ $penyesuaian->created_at->format('d/m/Y H:i') }}
                                             </td>
                                         </tr>
-                                    @empty
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
-                        @else
-                            <div class="p-6 md:p-8 text-center">
-                                <div class="mb-4">
-                                    <svg class="w-16 h-16 mx-auto text-slate-300" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <p class="text-slate-600 font-medium">Tidak ada penyesuaian</p>
-                                <p class="text-slate-500 text-sm">Semua stok barang sudah sesuai</p>
-                            </div>
-                        @endif
-                    </div>
+                        </div>
 
+                        {{-- SUMMARY --}}
+                        <div class="mt-6 bg-slate-50 rounded-xl p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                                <div>
+                                    <p class="text-2xl font-bold text-slate-900">{{ $stokOpname->penyesuaian->count() }}</p>
+                                    <p class="text-sm text-slate-600">Total Barang</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-green-600">{{ $stokOpname->penyesuaian->where('selisih', '>', 0)->count() }}</p>
+                                    <p class="text-sm text-slate-600">Lebih</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-red-600">{{ $stokOpname->penyesuaian->where('selisih', '<', 0)->count() }}</p>
+                                    <p class="text-sm text-slate-600">Kurang</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-slate-600">{{ $stokOpname->penyesuaian->where('selisih', '=', 0)->count() }}</p>
+                                    <p class="text-sm text-slate-600">Sesuai</p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center py-12">
+                            <div class="mx-auto w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-balance-scale text-3xl text-slate-400"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-slate-900 mb-2">Belum Ada Penyesuaian</h3>
+                            <p class="text-slate-600 mb-6">
+                                Stok opname ini belum memiliki data penyesuaian. Buat penyesuaian untuk menyelaraskan stok sistem dengan kondisi fisik.
+                            </p>
+                            @can('create', App\Models\Penyesuaian::class)
+                                <a href="{{ route('penyesuaians.create') }}"
+                                    class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition shadow">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Buat Penyesuaian Sekarang
+                                </a>
+                            @endcan
+                        </div>
+                    @endif
                 </div>
-
-                {{-- RINGKASAN STATISTIK --}}
-                @if ($stokOpname->penyesuaian->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        {{-- Barang Berkurang --}}
-                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-slate-600 text-sm font-medium">Barang Berkurang</p>
-                                    <p class="text-3xl font-bold text-rose-600 mt-2">
-                                        {{ abs($stokOpname->penyesuaian->where('selisih', '<', 0)->sum('selisih')) }}
-                                    </p>
-                                    <p class="text-xs text-slate-500 mt-1">
-                                        {{ $stokOpname->penyesuaian->where('selisih', '<', 0)->count() }} item
-                                    </p>
-                                </div>
-                                <div class="w-12 h-12 rounded-2xl bg-rose-100 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-rose-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 17H5m12 0v-4m0 4l-4-4m4 4l4-4"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Barang Bertambah --}}
-                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-slate-600 text-sm font-medium">Barang Bertambah</p>
-                                    <p class="text-3xl font-bold text-emerald-600 mt-2">
-                                        {{ $stokOpname->penyesuaian->where('selisih', '>', 0)->sum('selisih') }}
-                                    </p>
-                                    <p class="text-xs text-slate-500 mt-1">
-                                        {{ $stokOpname->penyesuaian->where('selisih', '>', 0)->count() }} item
-                                    </p>
-                                </div>
-                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 7H5m12 0v4m0-4l-4 4m4-4l4 4"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Net Selisih --}}
-                        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-slate-600 text-sm font-medium">Net Selisih</p>
-                                    <p class="text-3xl font-bold text-blue-600 mt-2">
-                                        {{ $stokOpname->penyesuaian->sum('selisih') }}
-                                    </p>
-                                    <p class="text-xs text-slate-500 mt-1">Total penyesuaian stok</p>
-                                </div>
-                                <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                @endif
 
             </div>
 

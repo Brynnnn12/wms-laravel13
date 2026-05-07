@@ -79,6 +79,26 @@ class RoleSeeder extends Seeder
 
         ]);
 
+        // inventaris: barang, penyesuaian, penyusutan
+        $inventaris->syncPermissions([
+            'barang.view',
+            'barang.create',
+            'barang.update',
+            'barang.delete',
+            'penyesuaian.view',
+            'penyesuaian.create',
+            'penyusutan.view',
+            'penyusutan.create',
+        ]);
+
+        // keuangan: stok opname, penyusutan
+        $keuangan->syncPermissions([
+            'stok opname.view',
+            'stok opname.create',
+            'penyusutan.view',
+            'penyusutan.create',
+        ]);
+
         app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
     }

@@ -43,6 +43,10 @@ class PermissionSeeder extends Seeder
             'barang.delete',
             'stok opname.view',
             'stok opname.create',
+            'penyesuaian.view',
+            'penyesuaian.create',
+            'penyesuaian.update',
+            'penyesuaian.delete',
             'penyusutan.view',
             'penyusutan.create',
         ];

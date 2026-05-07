@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Barang;
-use App\Models\Penyesuaian;
 use App\Models\StokOpname;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -17,14 +16,14 @@ class StokOpnameRepository
 
     public function findById(string $id): ?StokOpname
     {
-        return StokOpname::with(['user', 'namaRuang', 'penyesuaian.barang'])
+        return StokOpname::with(['user', 'namaRuang'])
             ->find($id);
     }
 
     public function getAll(int $perPage = 15, array $filters = [])
     {
         $query = StokOpname::query()
-            ->with(['user', 'namaRuang', 'penyesuaian']);
+            ->with(['user', 'namaRuang']);
 
         // ✅ LOGIKA POLICY: Jika bukan super-admin, hanya ambil data milik sendiri
         // Ini memastikan user Inventaris tidak melihat daftar opname orang lain
@@ -67,19 +66,5 @@ class StokOpnameRepository
     public function findBarangById(string $id): Barang
     {
         return Barang::findOrFail($id);
-    }
-
-    public function createPenyesuaian(array $data): Penyesuaian
-    {
-        return Penyesuaian::create($data);
-    }
-
-    public function updateBarangStock(string $barangId, int $qtyFisik): void
-    {
-        // Menggunakan update pada instance model agar trigger observer (jika ada) tetap jalan
-        $barang = Barang::find($barangId);
-        if ($barang) {
-            $barang->update(['jml_barang' => $qtyFisik]);
-        }
     }
 }
