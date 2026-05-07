@@ -12,8 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penyusutans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('barang_id')->constrained()->cascadeOnDelete();
+            $table->unsignedTinyInteger('bulan');
+            $table->year('tahun');
+            $table->decimal('nilai_awal', 15, 2);
+            $table->decimal('nilai_penyusutan', 15, 2);
+            $table->decimal('akumulasi_penyusutan', 15, 2);
+            $table->decimal('nilai_buku', 15, 2);
+            $table->timestamp('generated_at')->nullable();
             $table->timestamps();
+
+            $table->unique(['barang_id', 'bulan', 'tahun']);
+            $table->index(['bulan', 'tahun']);
         });
     }
 

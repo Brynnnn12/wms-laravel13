@@ -142,7 +142,7 @@
                 </tr>
                 <tr>
                     <td class="field-label">Tgl Perolehan</td>
-                    <td class="field-value">: {{ $barang->created_at->format('d/m/Y') }}</td>
+                    <td class="field-value">: {{ $barang->tanggal_perolehan?->format('d/m/Y') ?? $barang->created_at?->format('d/m/Y') }}</td>
                 </tr>
             </table>
         </div>

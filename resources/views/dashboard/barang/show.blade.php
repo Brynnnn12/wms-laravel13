@@ -146,7 +146,7 @@
                             <div>
                                 <p class="text-sm text-slate-500">Masa Penyusutan</p>
                                 <p class="font-semibold text-slate-800 mt-1">
-                                    {{ $barang->masa_penyusutan ?? '-' }} tahun
+                                    {{ $barang->masa_penyusutan ?? '-' }} bulan
                                 </p>
                             </div>
 
@@ -182,6 +182,13 @@
                                 <p class="text-sm text-slate-500">Tahun Anggaran</p>
                                 <p class="font-semibold text-slate-800 mt-1">
                                     {{ $barang->tahun_anggaran ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-slate-500">Tanggal Perolehan</p>
+                                <p class="font-semibold text-slate-800 mt-1">
+                                    {{ $barang->tanggal_perolehan?->format('d M Y') ?? '-' }}
                                 </p>
                             </div>
                         </div>

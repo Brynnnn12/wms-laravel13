@@ -105,7 +105,7 @@
                             {{-- Masa Penyusutan --}}
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                    Masa Penyusutan (tahun)
+                                    Masa Penyusutan (bulan)
                                 </label>
 
                                 <input type="number"
@@ -258,6 +258,22 @@
                                     class="w-full rounded-2xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
 
                                 @error('tahun_anggaran')
+                                    <p class="text-sm text-rose-600 mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Tanggal Perolehan --}}
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                                    Tanggal Perolehan
+                                </label>
+
+                                <input type="date"
+                                    name="tanggal_perolehan"
+                                    value="{{ old('tanggal_perolehan') }}"
+                                    class="w-full rounded-2xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
+
+                                @error('tanggal_perolehan')
                                     <p class="text-sm text-rose-600 mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

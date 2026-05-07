@@ -49,6 +49,7 @@
                     $menu('fa-boxes-stacked', 'Lokasi Penyimpanan', route('lokasi-penyimpanan.index'), request()->is('dashboard/lokasi-penyimpanan*')),
                     $menu('fa-door-open', 'Nama Ruangan', route('nama-ruang.index'), request()->is('dashboard/nama-ruang*')),
                     $menu('fa-box', 'Barang', route('barang.index'), request()->is('dashboard/barang*')),
+                    $menu('fa-chart-line', 'Penyusutan Aset', route('penyusutans.index'), request()->is('dashboard/penyusutans*')),
                     $menu('fa-clipboard', 'Stok Opname', route('stok-opnames.index'), request()->is('dashboard/stok-opname*'))
                 ]
             ],
@@ -124,6 +125,7 @@
                 'title' => 'Keuangan',
                 'icon'  => 'fa-wallet',
                 'items' => [
+                    $menu('fa-chart-line', 'Penyusutan Aset', route('penyusutans.index'), request()->is('dashboard/penyusutans*')),
                     $menu('fa-file-invoice-dollar', 'Laporan Keuangan', '#', false),
                 ]
             ],

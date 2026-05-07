@@ -34,6 +34,7 @@ class StoreBarangRequest extends FormRequest
             'kondisi_barang_id' => ['required', 'exists:kondisi_barangs,id'],
             'nama_ruang_id' => ['required', 'exists:nama_ruangs,id'],
             'tahun_anggaran' => ['nullable', 'integer', 'digits:4', 'min:1900', 'max:' . (date('Y') + 1)],
+            'tanggal_perolehan' => ['nullable', 'date'],
 
         ];
     }
@@ -51,6 +52,7 @@ class StoreBarangRequest extends FormRequest
             'kondisi_barang_id' => 'kondisi barang',
             'nama_ruang_id' => 'nama ruang',
             'tahun_anggaran' => 'tahun anggaran',
+            'tanggal_perolehan' => 'tanggal perolehan',
         ];
     }
 
@@ -82,6 +84,7 @@ class StoreBarangRequest extends FormRequest
             'tahun_anggaran.digits' => 'Tahun anggaran harus terdiri dari 4 digit.',
             'tahun_anggaran.min' => 'Tahun anggaran minimal adalah 1900.',
             'tahun_anggaran.max' => 'Tahun anggaran maksimal adalah tahun depan (' . (date('Y') + 1) . ').',
+            'tanggal_perolehan.date' => 'Tanggal perolehan harus berupa tanggal yang valid.',
         ];
     }
 }
