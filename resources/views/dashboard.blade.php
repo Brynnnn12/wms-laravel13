@@ -44,7 +44,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-sm text-slate-500">Total Barang</p>
-                            <h3 class="text-3xl font-bold text-slate-800 mt-1">1,248</h3>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-1">{{ number_format($totalBarang) }}</h3>
                         </div>
 
                         <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center">
@@ -57,7 +57,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-sm text-slate-500">Barang Masuk</p>
-                            <h3 class="text-3xl font-bold text-slate-800 mt-1">326</h3>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-1">{{ number_format($barangMasuk) }}</h3>
                         </div>
 
                         <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center">
@@ -70,7 +70,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-sm text-slate-500">Barang Keluar</p>
-                            <h3 class="text-3xl font-bold text-slate-800 mt-1">214</h3>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-1">{{ number_format($barangKeluar) }}</h3>
                         </div>
 
                         <div class="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center">
@@ -83,12 +83,75 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-sm text-slate-500">Stok Menipis</p>
-                            <h3 class="text-3xl font-bold text-slate-800 mt-1">18</h3>
+                            <h3 class="text-3xl font-bold text-slate-800 mt-1">{{ number_format($stokMenipis) }}</h3>
                         </div>
 
                         <div class="w-14 h-14 rounded-2xl bg-rose-100 flex items-center justify-center">
                             <i class="fas fa-triangle-exclamation text-rose-600 text-xl"></i>
                         </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- STATISTIK BERDASARKAN KONDISI & STATUS --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {{-- BARANG BERDASARKAN KONDISI --}}
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+                    <div class="mb-5">
+                        <h2 class="text-lg font-bold text-slate-800">
+                            Barang Berdasarkan Kondisi
+                        </h2>
+                        <p class="text-sm text-slate-500">
+                            Distribusi kondisi barang saat ini
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        @forelse($barangByKondisi as $kondisi)
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                                    <span class="text-sm font-medium text-slate-700">{{ $kondisi->nama_kondisi }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-bold text-slate-900">{{ number_format($kondisi->barangs_count) }}</span>
+                                    <span class="text-xs text-slate-500">barang</span>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-sm text-slate-500 text-center py-4">Belum ada data kondisi barang</p>
+                        @endforelse
+                    </div>
+                </div>
+
+                {{-- BARANG BERDASARKAN STATUS --}}
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+                    <div class="mb-5">
+                        <h2 class="text-lg font-bold text-slate-800">
+                            Barang Berdasarkan Status
+                        </h2>
+                        <p class="text-sm text-slate-500">
+                            Status ketersediaan barang
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        @forelse($barangByStatus as $status)
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                    <span class="text-sm font-medium text-slate-700">{{ $status->nama_status }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-bold text-slate-900">{{ number_format($status->barangs_count) }}</span>
+                                    <span class="text-xs text-slate-500">barang</span>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-sm text-slate-500 text-center py-4">Belum ada data status barang</p>
+                        @endforelse
                     </div>
                 </div>
 
@@ -127,58 +190,55 @@
 
             </div>
 
-            {{-- TABLE MINI --}}
+            {{-- TABLE BARANG TERUPDATE --}}
             <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="px-6 py-5 border-b border-slate-100">
                     <h2 class="text-lg font-bold text-slate-800">
-                        Aktivitas Terbaru
+                        Barang Terupdate
                     </h2>
+                    <p class="text-sm text-slate-500">
+                        5 barang yang terakhir diupdate
+                    </p>
                 </div>
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                         <thead class="bg-slate-50 text-slate-500">
                             <tr>
-                                <th class="px-6 py-4 text-left">Tanggal</th>
-                                <th class="px-6 py-4 text-left">Aktivitas</th>
-                                <th class="px-6 py-4 text-left">User</th>
-                                <th class="px-6 py-4 text-left">Status</th>
+                                <th class="px-6 py-4 text-left">Kode Barang</th>
+                                <th class="px-6 py-4 text-left">Nama Barang</th>
+                                <th class="px-6 py-4 text-left">Jenis</th>
+                                <th class="px-6 py-4 text-left">Stok</th>
+                                <th class="px-6 py-4 text-left">Kondisi</th>
+                                <th class="px-6 py-4 text-left">Terakhir Update</th>
                             </tr>
                         </thead>
 
                         <tbody class="divide-y divide-slate-100">
-                            <tr>
-                                <td class="px-6 py-4">27 Apr 2026</td>
-                                <td class="px-6 py-4">Input Barang Masuk</td>
-                                <td class="px-6 py-4">Admin</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-700 text-xs font-semibold">
-                                        Sukses
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="px-6 py-4">27 Apr 2026</td>
-                                <td class="px-6 py-4">Mutasi Gudang</td>
-                                <td class="px-6 py-4">Staff</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 rounded-xl bg-blue-100 text-blue-700 text-xs font-semibold">
-                                        Diproses
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="px-6 py-4">26 Apr 2026</td>
-                                <td class="px-6 py-4">Stock Opname</td>
-                                <td class="px-6 py-4">Supervisor</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 rounded-xl bg-amber-100 text-amber-700 text-xs font-semibold">
-                                        Review
-                                    </span>
-                                </td>
-                            </tr>
+                            @forelse($barangTerupdate as $barang)
+                                <tr>
+                                    <td class="px-6 py-4 font-medium text-slate-900">{{ $barang->kode_barang }}</td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-medium text-slate-900">{{ $barang->nama_barang }}</div>
+                                        <div class="text-xs text-slate-500">{{ $barang->namaRuang?->nama_ruang ?? 'N/A' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">{{ $barang->jenisBarang?->nama_jenis ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 rounded text-xs font-semibold
+                                            {{ $barang->jml_barang <= 10 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                            {{ $barang->jml_barang }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">{{ $barang->kondisiBarang?->nama_kondisi ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4 text-slate-500">{{ $barang->updated_at->diffForHumans() }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                                        Belum ada data barang
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -200,21 +260,27 @@
             const categoryCanvas = document.getElementById('categoryChart');
 
             if (transactionCanvas) {
+                const transactionData = @json($transactionData);
+
                 new Chart(transactionCanvas, {
                     type: 'line',
                     data: {
-                        labels: ['Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr'],
+                        labels: transactionData.map(item => item.month),
                         datasets: [
                             {
                                 label: 'Barang Masuk',
-                                data: [120, 190, 170, 220, 260, 326],
+                                data: transactionData.map(item => item.masuk),
+                                borderColor: 'rgb(34, 197, 94)',
+                                backgroundColor: 'rgba(34, 197, 94, 0.1)',
                                 borderWidth: 3,
                                 tension: 0.4,
                                 fill: true
                             },
                             {
                                 label: 'Barang Keluar',
-                                data: [90, 130, 110, 170, 180, 214],
+                                data: transactionData.map(item => item.keluar),
+                                borderColor: 'rgb(245, 158, 11)',
+                                backgroundColor: 'rgba(245, 158, 11, 0.1)',
                                 borderWidth: 3,
                                 tension: 0.4,
                                 fill: true
@@ -225,18 +291,31 @@
                         responsive: true,
                         plugins: {
                             legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
                 });
             }
 
             if (categoryCanvas) {
+                const categoryData = @json($categoryData);
+
                 new Chart(categoryCanvas, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Elektronik', 'ATK', 'Furniture', 'Lainnya'],
+                        labels: categoryData.map(item => item.nama_jenis),
                         datasets: [{
-                            data: [35, 25, 20, 20],
+                            data: categoryData.map(item => item.count),
+                            backgroundColor: [
+                                'rgb(34, 197, 94)',
+                                'rgb(59, 130, 246)',
+                                'rgb(245, 158, 11)',
+                                'rgb(239, 68, 68)'
+                            ],
                             borderWidth: 0
                         }]
                     },

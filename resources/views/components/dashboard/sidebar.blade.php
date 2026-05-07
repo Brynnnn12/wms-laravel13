@@ -94,7 +94,7 @@
                 'items' => [
                     $menu('fa-box', 'Barang', route('barang.index'), request()->is('dashboard/barang*')),
                     $menu('fa-tags', 'Jenis Barang', route('jenis-barang.index'), request()->is('dashboard/jenis-barang*')),
-                    $menu('fa-balance-scale', 'Penyesuaian Stok', route('penyesuaians.index'), request()->is('dashboard/penyesuaian*')),
+                    $menu('fa-clipboard', 'Stok Opname', route('stok-opnames.index'), request()->is('dashboard/stok-opname*')),
                 ]
             ],
         ];

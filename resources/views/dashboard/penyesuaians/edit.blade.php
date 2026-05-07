@@ -26,10 +26,10 @@
                                 <i class="fas fa-eye mr-2"></i>
                                 Lihat
                             </a>
-                            <a href="{{ route('penyesuaians.index') }}"
+                            <a href="{{ route('stok-opnames.show', $penyesuaian->stokOpname) }}"
                                 class="inline-flex items-center px-4 py-2 rounded-2xl bg-white/10 text-white font-semibold text-sm border border-white/20 hover:bg-white/20 transition">
                                 <i class="fas fa-arrow-left mr-2"></i>
-                                Kembali
+                                Kembali ke Stok Opname
                             </a>
                         </div>
                     </div>

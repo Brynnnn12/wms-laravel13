@@ -5,101 +5,75 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        $superAdmin = Role::firstOrCreate([
-            'name' => 'super-admin',
-            'guard_name' => 'web',
-        ]);
+        // Reset cache permission
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $inventaris = Role::firstOrCreate([
-            'name' => 'inventaris',
-            'guard_name' => 'web',
-        ]);
+        // 1. BUAT ROLE
+        $superAdmin = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => 'web']);
+        $inventaris = Role::firstOrCreate(['name' => 'inventaris', 'guard_name' => 'web']);
+        $keuangan = Role::firstOrCreate(['name' => 'keuangan', 'guard_name' => 'web']);
 
-        $keuangan = Role::firstOrCreate([
-            'name' => 'keuangan',
-            'guard_name' => 'web',
-        ]);
+        // 2. ASSIGN PERMISSIONS KE ROLE
 
-        User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'bryankurniaakbar12@gmail.com',
-            'is_active' => true,
+        // Super Admin: Bisa semua (mengambil semua nama permission dari database)
+        $allPermissions = Permission::all();
+        $superAdmin->syncPermissions($allPermissions);
 
-        ])->assignRole($superAdmin);
-
-        //buat user role admin
-        User::factory()->create([
-            'name' => 'Inventaris',
-            'email' => 'inventaris@example.com',
-        ])->assignRole($inventaris);
-
-        //buat user role keuangan
-        User::factory()->create([
-            'name' => 'Keuangan',
-            'email' => 'keuangan@example.com',
-        ])->assignRole($keuangan);
-
-        // super admin semua permission
-        $superAdmin->syncPermissions([
-            'jenis barang.view',
-            'jenis barang.create',
-            'jenis barang.update',
-            'jenis barang.delete',
-            'status barang.view',
-            'status barang.create',
-            'status barang.update',
-            'status barang.delete',
-            'kondisi barang.view',
-            'kondisi barang.create',
-            'kondisi barang.update',
-            'kondisi barang.delete',
-            'user.view',
-            'user.create',
-            'user.update',
-            'user.delete',
-            'lokasi penyimpanan.view',
-            'lokasi penyimpanan.create',
-            'lokasi penyimpanan.update',
-            'lokasi penyimpanan.delete',
-            'ruangan.view',
-            'ruangan.create',
-            'ruangan.update',
-            'ruangan.delete',
-            'barang.view',
-            'barang.create',
-            'barang.update',
-            'barang.delete',
-            'stok opname.view',
-            'stok opname.create',
-
-        ]);
-
-        // inventaris: barang, penyesuaian, penyusutan
+        // Inventaris: Lokasi, Ruang, Jenis Barang, Barang, Penyesuaian
         $inventaris->syncPermissions([
-            'barang.view',
-            'barang.create',
-            'barang.update',
-            'barang.delete',
-            'penyesuaian.view',
-            'penyesuaian.create',
-            'penyusutan.view',
-            'penyusutan.create',
+            'lokasi penyimpanan.view', 'lokasi penyimpanan.create', 'lokasi penyimpanan.update', 'lokasi penyimpanan.delete',
+            'ruangan.view', 'ruangan.create', 'ruangan.update', 'ruangan.delete',
+            'jenis barang.view', 'jenis barang.create', 'jenis barang.update', 'jenis barang.delete',
+            'barang.view', 'barang.create', 'barang.update', 'barang.delete',
+            'penyesuaian.view', 'penyesuaian.create', 'penyesuaian.update', 'penyesuaian.delete',
+            'kondisi barang.view', 'status barang.view', // Tambahan agar bisa melihat referensi saat input barang
         ]);
 
-        // keuangan: stok opname, penyusutan
+        // Keuangan: Laporan SO (Stok Opname) dan Laporan Penyusutan
         $keuangan->syncPermissions([
             'stok opname.view',
-            'stok opname.create',
+            'stok opname.create', // Biasanya keuangan perlu 'create' untuk generate sesi opname
             'penyusutan.view',
-            'penyusutan.create',
+            'penyusutan.create' // Biasanya keuangan yang men-trigger proses penyusutan
         ]);
 
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        // 3. BUAT USER DUMMY (Jika belum ada)
 
+        // Super Admin
+        $userSuper = User::updateOrCreate(
+            ['email' => 'bryankurniaakbar12@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => bcrypt('password'), // Ganti sesuai kebutuhan
+                'is_active' => true,
+            ]
+        );
+        $userSuper->assignRole($superAdmin);
+
+        // User Inventaris
+        $userInv = User::updateOrCreate(
+            ['email' => 'inventaris@example.com'],
+            [
+                'name' => 'Staff Inventaris',
+                'password' => bcrypt('password'),
+            ]
+        );
+        $userInv->assignRole($inventaris);
+
+        // User Keuangan
+        $userKeu = User::updateOrCreate(
+            ['email' => 'keuangan@example.com'],
+            [
+                'name' => 'Staff Keuangan',
+                'password' => bcrypt('password'),
+            ]
+        );
+        $userKeu->assignRole($keuangan);
     }
 }

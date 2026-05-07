@@ -6,7 +6,8 @@
             <div
                 class="mb-6 rounded-3xl bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 p-6 md:p-8 shadow-xl">
                 <div class="flex items-center justify-between">
-                    <div>
+
+                    <div >
                         <p class="text-emerald-100 text-sm font-medium mb-2">Stok Opname Management</p>
                         <h1 class="text-3xl font-bold text-white">Detail Stok Opname</h1>
                         <p class="text-emerald-100 text-sm mt-2">
@@ -15,6 +16,7 @@
                         </p>
                     </div>
                     <div class="text-right">
+
                         <p class="text-emerald-100 text-sm">Tanggal Opname</p>
                         <p class="text-2xl font-bold text-white">{{ $stokOpname->tanggal_so->format('d M Y') }}</p>
                     </div>
@@ -73,7 +75,7 @@
                         <div class="flex gap-3">
                             @can('create', App\Models\Penyesuaian::class)
                                 @if($stokOpname->penyesuaian->isEmpty())
-                                    <a href="{{ route('penyesuaians.create') }}"
+                                    <a href="{{ route('penyesuaians.create', ['stok_opname_id' => $stokOpname->id]) }}"
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition shadow">
                                         <i class="fas fa-plus mr-2"></i>
                                         Buat Penyesuaian
@@ -199,20 +201,6 @@
 
             </div>
 
-            {{-- ACTIONS --}}
-            <div class="mt-8 flex justify-between items-center">
-                <a href="{{ route('stok-opnames.index') }}"
-                    class="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition">
-                    ← Kembali
-                </a>
-
-                <div class="flex gap-3">
-                    <a href="{{ route('stok-opnames.create') }}"
-                        class="px-6 py-3 rounded-2xl bg-slate-600 text-white font-semibold hover:bg-slate-700 transition shadow">
-                        Buat Stok Opname Baru
-                    </a>
-                </div>
-            </div>
 
         </div>
     </div>

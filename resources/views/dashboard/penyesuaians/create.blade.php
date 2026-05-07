@@ -11,7 +11,7 @@
                             <h1 class="text-2xl md:text-3xl font-bold text-white">Tambah Penyesuaian Stok</h1>
                             <p class="text-blue-100 text-sm mt-2">Buat penyesuaian stok berdasarkan hasil opname fisik.</p>
                         </div>
-                        <a href="{{ route('penyesuaians.index') }}"
+                        <a href="{{ route('stok-opnames.index') }}"
                             class="inline-flex items-center px-5 py-3 rounded-2xl bg-white/10 text-white font-semibold text-sm border border-white/20 hover:bg-white/20 transition">
                             <i class="fas fa-arrow-left mr-2"></i> Kembali
                         </a>
@@ -19,15 +19,56 @@
                 </div>
             </div>
 
-            {{-- SCANNER SECTION --}}
-            <template x-if="showScanner">
-                <div class="mb-6 overflow-hidden rounded-3xl bg-white border border-slate-200 shadow-sm p-4">
-                    <div id="qr-reader" class="w-full"></div>
-                    <button @click="toggleScanner()" type="button" class="mt-4 w-full py-2 bg-red-100 text-red-600 rounded-xl font-bold">
-                        Tutup Kamera
-                    </button>
+            {{-- SCANNER MODAL --}}
+            <div x-show="showScanner"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                @keydown.escape.window="toggleScanner()"
+                @click.away.prevent>
+
+                <div x-show="showScanner"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-hidden">
+
+                    {{-- Modal Header --}}
+                    <div class="flex items-center justify-between p-6 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800">
+                            <i class="fas fa-camera mr-2 text-blue-600"></i>
+                            Scan Barcode
+                        </h3>
+                        <button @click="toggleScanner()"
+                            class="text-slate-400 hover:text-slate-600 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    {{-- Modal Body --}}
+                    <div class="p-6">
+                        <div id="qr-reader" class="w-full rounded-xl overflow-hidden bg-slate-100" style="aspect-ratio: 1; min-height: 250px; max-height: 300px;"></div>
+
+                        <div class="mt-4 text-center">
+                            <p class="text-sm text-slate-600 mb-4">
+                                Arahkan kamera ke barcode atau QR code barang
+                            </p>
+                            <button @click="toggleScanner()" type="button"
+                                class="w-full py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                                <i class="fas fa-times mr-2"></i>
+                                Tutup Kamera
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </template>
+            </div>
 
             {{-- FORM --}}
             <div class="rounded-3xl bg-white border border-slate-200 shadow-sm">
@@ -36,8 +77,34 @@
 
                     {{-- Pilih Stok Opname --}}
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Stok Opname <span class="text-red-500">*</span></label>
-                        <div class="relative">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            Stok Opname <span class="text-red-500">*</span>
+                            <span x-show="selectedStokOpname" class="text-xs text-emerald-600 font-normal">(Sudah dipilih otomatis)</span>
+                        </label>
+
+                        {{-- Jika sudah dipilih otomatis, tampilkan info lengkap --}}
+                        <div x-show="selectedStokOpname" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                            <input type="hidden" name="stok_opname_id" x-model="selectedStokOpname">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-semibold text-emerald-800" x-text="getSelectedStokOpnameText()"></h4>
+                                    <p class="text-sm text-emerald-600 mt-1">
+                                        <span class="font-medium">Tanggal Opname:</span>
+                                        <span x-text="selectedStokOpnameData?.tanggal_so"></span>
+                                    </p>
+                                    <p x-show="selectedStokOpnameData?.keterangan" class="text-sm text-emerald-600">
+                                        <span class="font-medium">Keterangan:</span>
+                                        <span x-text="selectedStokOpnameData.keterangan"></span>
+                                    </p>
+                                </div>
+                                <div class="text-emerald-600">
+                                    <i class="fas fa-check-circle text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Jika belum dipilih, tampilkan input search --}}
+                        <div x-show="!selectedStokOpname" class="relative">
                             <input type="hidden" name="stok_opname_id" x-model="selectedStokOpname">
 
                             {{-- Input Search --}}
@@ -177,7 +244,7 @@
 
                     {{-- Actions --}}
                     <div class="flex flex-col sm:flex-row sm:justify-end sm:items-center gap-3 pt-6 border-t border-slate-200">
-                        <a href="{{ route('penyesuaians.index') }}"
+                        <a href="{{ route('stok-opnames.index') }}"
                             class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 px-6 py-3 text-sm font-semibold hover:bg-slate-100 transition">
                             Batal
                         </a>
@@ -192,6 +259,7 @@
     </div>
 
     @push('scripts')
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         function penyesuaianForm() {
             return {
@@ -222,6 +290,15 @@
                         keterangan: so.keterangan,
                         created_at: new Date(so.created_at).toLocaleDateString('id-ID') + ' ' + new Date(so.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})
                     }));
+
+                    // Jika ada selectedStokOpname dari PHP, set secara otomatis
+                    @if(isset($selectedStokOpname) && $selectedStokOpname)
+                        this.selectedStokOpname = '{{ $selectedStokOpname->id }}';
+                        this.selectedStokOpnameData = this.stokOpnames.find(so => so.id === '{{ $selectedStokOpname->id }}');
+                        this.stokOpnameSearch = this.getSelectedStokOpnameText();
+                        // Load barang otomatis
+                        this.fetchBarang();
+                    @endif
 
                     this.$watch('selectedStokOpname', (val) => {
                         if (val) this.fetchBarang();
@@ -455,29 +532,47 @@
 
                 toggleScanner() {
                     this.showScanner = !this.showScanner;
+
+                    // Handle body scroll lock
                     if (this.showScanner) {
+                        document.body.style.overflow = 'hidden';
                         this.$nextTick(() => this.startScanner());
                     } else {
+                        document.body.style.overflow = '';
                         this.stopScanner();
                     }
                 },
 
                 startScanner() {
-                    const html5QrCode = new Html5Qrcode("qr-reader");
-                    html5QrCode.start(
-                        { facingMode: "environment" },
-                        { fps: 15, qrbox: 250 },
-                        (text) => this.processScanResult(text)
-                    ).catch(() => {
-                        this.showScanner = false;
-                        Swal.fire('Kamera Error', 'Izin kamera ditolak atau tidak ditemukan.', 'error');
+                    // Wait for DOM to be ready
+                    this.$nextTick(() => {
+                        const container = document.getElementById('qr-reader');
+                        if (!container) return;
+
+                        const html5QrCode = new Html5Qrcode("qr-reader");
+                        html5QrCode.start(
+                            { facingMode: "environment" },
+                            {
+                                fps: 15,
+                                qrbox: { width: 250, height: 250 },
+                                aspectRatio: 1.0
+                            },
+                            (text) => this.processScanResult(text)
+                        ).catch(() => {
+                            this.showScanner = false;
+                            document.body.style.overflow = '';
+                            Swal.fire('Kamera Error', 'Izin kamera ditolak atau tidak ditemukan.', 'error');
+                        });
+                        this.scanner = html5QrCode;
                     });
-                    this.scanner = html5QrCode;
                 },
 
                 stopScanner() {
                     if (this.scanner) {
-                        this.scanner.stop().then(() => { this.scanner = null; });
+                        this.scanner.stop().then(() => {
+                            this.scanner = null;
+                            document.body.style.overflow = '';
+                        });
                     }
                 },
 

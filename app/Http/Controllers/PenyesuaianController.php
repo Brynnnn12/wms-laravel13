@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Opname\StorePenyesuaianRequest;
 use App\Models\Penyesuaian;
 use App\Services\PenyesuaianService;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class PenyesuaianController extends Controller
 {
-    use AuthorizesRequests;
 
     public function __construct(
         private PenyesuaianService $service,
@@ -29,13 +28,20 @@ class PenyesuaianController extends Controller
     }
 
     #[Authorize('create', Penyesuaian::class)]
-    public function create(): View
+    public function create(Request $request): View
     {
         // Ambil stok opname yang belum memiliki penyesuaian lengkap
         $stokOpnames = $this->service->getStokOpnamesForPenyesuaian();
 
+        // Jika ada parameter stok_opname_id dari URL, cari dan set sebagai selected
+        $selectedStokOpname = null;
+        if ($request->has('stok_opname_id')) {
+            $selectedStokOpname = $stokOpnames->find($request->stok_opname_id);
+        }
+
         return view('dashboard.penyesuaians.create', [
             'stokOpnames' => $stokOpnames,
+            'selectedStokOpname' => $selectedStokOpname,
         ]);
     }
 
@@ -47,7 +53,7 @@ class PenyesuaianController extends Controller
 
             toast(count($penyesuaians) . ' penyesuaian berhasil disimpan!', 'success');
             return redirect()
-                ->route('penyesuaians.index');
+                ->route('stok-opnames.show', $request->stok_opname_id);
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -82,7 +88,7 @@ class PenyesuaianController extends Controller
 
             toast('Penyesuaian berhasil diperbarui!', 'success');
             return redirect()
-                ->route('penyesuaians.show', $penyesuaian);
+                ->route('stok-opnames.show', $penyesuaian->stokOpname);
         } catch (\Exception $e) {
             return redirect()
                 ->back()

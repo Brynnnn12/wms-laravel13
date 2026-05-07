@@ -23,9 +23,7 @@ Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('dashboard')->group(function () {
 
@@ -62,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/stok-opnames/barang-by-ruang', [App\Http\Controllers\StokOpnameController::class, 'getBarangByRuang'])->name('stok-opnames.barang-by-ruang');
         Route::resource('/stok-opnames', App\Http\Controllers\StokOpnameController::class)->only(['index', 'create', 'store', 'show']);
 
-        Route::resource('/penyesuaians', App\Http\Controllers\PenyesuaianController::class);
+        Route::resource('/penyesuaians', App\Http\Controllers\PenyesuaianController::class)->except(['index']);
 
         Route::get('/penyusutans', [PenyusutanController::class, 'index'])->name('penyusutans.index');
         Route::post('/penyusutans/generate', [PenyusutanController::class, 'generate'])->name('penyusutans.generate');

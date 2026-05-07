@@ -78,13 +78,4 @@
         </div>
     </div>
 
-
-
-    <style>
-        [x-cloak] { display: none !important; }
-        .qty-input-field:focus {
-            transform: scale(1.05);
-            transition: all 0.2s;
-        }
-    </style>
 </x-app-layout>
