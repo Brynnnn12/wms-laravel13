@@ -19,7 +19,7 @@ class NamaRuangFactory extends Factory
     {
         return [
             'nama_ruang' => $this->faker->word(),
-            'lokasi_penyimpanan_id' => \App\Models\LokasiPenyimpanan::factory(),
+            'lokasi_penyimpanan_id' => \App\Models\LokasiPenyimpanan::inRandomOrder()->first()->id ?? \App\Models\LokasiPenyimpanan::factory(),
         ];
     }
 }

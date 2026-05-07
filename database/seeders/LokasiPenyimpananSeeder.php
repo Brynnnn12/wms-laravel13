@@ -12,6 +12,18 @@ class LokasiPenyimpananSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\LokasiPenyimpanan::factory()->count(10)->create();
+        $lokasiPenyimpanans = [
+            'Gudang Utama',
+            'Gudang Cadangan',
+            'Ruang Server',
+            'Ruang Kantor',
+            'Ruang Produksi',
+        ];
+
+        foreach ($lokasiPenyimpanans as $lokasi) {
+            \App\Models\LokasiPenyimpanan::factory()->create([
+                'nama_lokasi' => $lokasi,
+            ]);
+        }
     }
 }

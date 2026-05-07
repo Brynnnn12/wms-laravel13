@@ -18,7 +18,7 @@ class StatusBarangFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama_status' => fake()->unique()->word(),
+            'nama_status' => fake()->word(),
         ];
     }
 }

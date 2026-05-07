@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\KondisiBarang;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<KondisiBarang>
+ * @extends Factory<Permission>
  */
-class KondisiBarangFactory extends Factory
+class PermissionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +18,8 @@ class KondisiBarangFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama_kondisi' => fake()->word(),
+            'name' => fake()->unique()->word() . ' ' . fake()->randomElement(['create', 'read', 'update', 'delete']),
+            'guard_name' => 'web',
         ];
     }
 }

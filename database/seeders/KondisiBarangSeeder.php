@@ -12,6 +12,18 @@ class KondisiBarangSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\KondisiBarang::factory()->count(10)->create();
+        $kondisiBarangs = [
+            'Baik',
+            'Rusak Ringan',
+            'Rusak Berat',
+            'Hilang',
+            'Dalam Perbaikan',
+        ];
+
+        foreach ($kondisiBarangs as $kondisi) {
+            \App\Models\KondisiBarang::factory()->create([
+                'nama_kondisi' => $kondisi,
+            ]);
+        }
     }
 }

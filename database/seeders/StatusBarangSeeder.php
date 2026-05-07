@@ -12,6 +12,17 @@ class StatusBarangSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\StatusBarang::factory(10)->create();
+        $statusBarangs = [
+            'Aktif',
+            'Tidak Aktif',
+            'Dalam Pemeliharaan',
+            'Dihapus',
+        ];
+
+        foreach ($statusBarangs as $status) {
+            \App\Models\StatusBarang::factory()->create([
+                'nama_status' => $status,
+            ]);
+        }
     }
 }

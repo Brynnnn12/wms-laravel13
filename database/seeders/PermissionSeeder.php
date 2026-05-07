@@ -43,6 +43,8 @@ class PermissionSeeder extends Seeder
             'barang.delete',
             'stok opname.view',
             'stok opname.create',
+            'penyusutan.view',
+            'penyusutan.create',
         ];
 
         foreach ($permissions as $permission) {

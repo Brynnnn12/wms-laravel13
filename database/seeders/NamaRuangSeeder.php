@@ -12,6 +12,19 @@ class NamaRuangSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\NamaRuang::factory(10)->create();
+        $namaRuangs = [
+            'Ruang A1',
+            'Ruang A2',
+            'Ruang B1',
+            'Ruang B2',
+            'Ruang C1',
+        ];
+
+        foreach ($namaRuangs as $ruang) {
+            \App\Models\NamaRuang::factory()->create([
+                'nama_ruang' => $ruang,
+                'lokasi_penyimpanan_id' => \App\Models\LokasiPenyimpanan::inRandomOrder()->first()->id,
+            ]);
+        }
     }
 }

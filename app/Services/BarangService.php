@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Barang;
 use App\Repositories\BarangRepository;
+use Carbon\Carbon; // Pastikan Carbon diimport
 
 class BarangService
 {
@@ -12,24 +13,27 @@ class BarangService
      */
     public function __construct(
         protected BarangRepository $repository
-    )
-    {
+    ) {
         //
     }
 
-    public function paginate($perPage = 10, $search = null, array $filters = []) : \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function paginate($perPage = 10, $search = null, array $filters = []): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->repository->paginate($perPage, $search, $filters);
     }
 
-    public function create(array $data) : Barang
+    public function create(array $data): Barang
     {
-        $data['kode_barang'] = $this->generateKodeBarang();
+        // 1. Pass $data ke generateKodeBarang agar bisa baca tanggal_perolehan
+        $data['kode_barang'] = $this->generateKodeBarang($data);
+
+        // 2. Kalkulasi harga total
         $data['harga_total'] = $data['harga_satuan'] * $data['jml_barang'];
+
         return $this->repository->create($data);
     }
 
-    public function update(Barang $barang, array $data) : Barang
+    public function update(Barang $barang, array $data): Barang
     {
         //jika harga_satuan atau jml_barang diupdate, maka harga_total juga harus diupdate
         if (isset($data['harga_satuan']) || isset($data['jml_barang'])) {
@@ -40,35 +44,35 @@ class BarangService
         return $this->repository->update($barang, $data);
     }
 
-    public function delete(Barang $barang) : void
+    public function delete(Barang $barang): void
     {
         $this->repository->delete($barang);
     }
 
-    public function bulkDelete(array $ids) : int
+    public function bulkDelete(array $ids): int
     {
         return $this->repository->bulkDelete($ids);
     }
 
-    private function generateKodeBarang(): string
+    private function generateKodeBarang(array $data): string
     {
-        $year = now()->format('Y');
+        // Ambil tahun dari tanggal_perolehan, jika tidak ada baru gunakan tahun sekarang
+        $year = isset($data['tanggal_perolehan'])
+            ? Carbon::parse($data['tanggal_perolehan'])->format('Y')
+            : now()->format('Y');
 
-        // Mencari kode terakhir di tahun yang sama
         $latest = Barang::query()
-            ->whereYear('created_at', $year)
+            ->whereYear('tanggal_perolehan', $year) // Cari berdasarkan tanggal beli
             ->where('kode_barang', 'like', "BRG-$year-%")
-            ->latest('id')
+            ->latest('kode_barang') // Urutkan berdasarkan kode stringnya
             ->first();
 
-        if (! $latest) {
+        if (!$latest) {
             return "BRG-$year-0001";
         }
 
-        // Mengambil angka urut terakhir menggunakan regex
         preg_match('/(\d+)$/', $latest->kode_barang, $matches);
-
-        $lastNumber = isset($matches[1]) ? (int) $matches[1] : 0;
+        $lastNumber = isset($matches) ? (int) $matches : 0;
         $nextNumber = $lastNumber + 1;
 
         return "BRG-$year-" . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);

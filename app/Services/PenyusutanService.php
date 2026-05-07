@@ -44,13 +44,15 @@ class PenyusutanService
         DB::transaction(function () use ($bulan, $tahun) {
             $periodeAkhir = Carbon::create($tahun, $bulan, 1)->endOfMonth();
 
-            $barangs = Barang::query()
-                ->select('id', 'harga_total', 'nilai_residual', 'masa_penyusutan', 'tanggal_perolehan')
-                ->whereNotNull('tanggal_perolehan')
+            // Pastikan menggunakan Model::query() dan jangan gunakan get(['column'])
+            // agar tetap menjadi instance Eloquent Model
+            $barangs = Barang::whereNotNull('tanggal_perolehan')
                 ->whereDate('tanggal_perolehan', '<=', $periodeAkhir)
-                ->get();
+                ->get(['id', 'harga_total', 'nilai_residual', 'masa_penyusutan', 'tanggal_perolehan']);
 
             foreach ($barangs as $barang) {
+                // Jika masih error stdClass, kita bisa paksa casting atau pastikan loop
+                // menerima instance yang benar
                 $hasil = $this->hitungPenyusutanPerBarang($barang, $bulan, $tahun);
 
                 if ($hasil === null) {
@@ -76,42 +78,50 @@ class PenyusutanService
      */
     private function hitungPenyusutanPerBarang(Barang $barang, int $bulan, int $tahun): ?array
     {
-        if (! $barang->tanggal_perolehan) {
+        if (!$barang->tanggal_perolehan)
             return null;
-        }
 
         $masaPenyusutan = (int) $barang->masa_penyusutan;
         $hargaTotal = (float) $barang->harga_total;
         $nilaiResidual = (float) $barang->nilai_residual;
 
-        if ($masaPenyusutan <= 0 || $hargaTotal <= 0) {
+        if ($masaPenyusutan <= 0 || $hargaTotal <= 0)
             return null;
-        }
 
-        $periodeAkhir = Carbon::create($tahun, $bulan, 1)->endOfMonth();
-        $bulanSelisih = $barang->tanggal_perolehan->diffInMonths($periodeAkhir);
+        // 1. Tentukan titik akhir laporan (misal 31 Mar 2026)
+        $periodeLaporan = Carbon::create($tahun, $bulan, 1)->endOfMonth();
+        $tglPerolehan = Carbon::parse($barang->tanggal_perolehan);
 
+        // 2. HITUNG FREKUENSI (Logika Anniversary Date)
+        // diffInMonths dengan parameter boolean 'false' akan menghitung selisih bulan penuh
+        $frekuensi = (int) $tglPerolehan->diffInMonths($periodeLaporan, false);
+
+        // 3. Dasar Penyusutan
         $nilaiDisusutkan = max($hargaTotal - $nilaiResidual, 0);
         $penyusutanBulanan = $nilaiDisusutkan / $masaPenyusutan;
 
-        $frekuensi = min($bulanSelisih, $masaPenyusutan);
+        // Batasi frekuensi agar tidak melebihi masa penyusutan
+        $frekuensi = min($frekuensi, $masaPenyusutan);
 
         if ($frekuensi <= 0) {
             $nilaiAwal = $hargaTotal;
             $nilaiPenyusutan = 0;
             $akumulasi = 0;
             $nilaiBuku = $hargaTotal;
-        } elseif ($frekuensi >= $masaPenyusutan) {
-            $akumulasiSebelum = $penyusutanBulanan * max($masaPenyusutan - 1, 0);
-            $nilaiAwal = max($hargaTotal - $akumulasiSebelum, 0);
-            $nilaiPenyusutan = $hargaTotal - $akumulasiSebelum;
-            $akumulasi = $hargaTotal;
-            $nilaiBuku = 0;
         } else {
             $akumulasi = $penyusutanBulanan * $frekuensi;
-            $nilaiBuku = max($hargaTotal - $akumulasi, 0);
-            $nilaiAwal = $hargaTotal - ($penyusutanBulanan * ($frekuensi - 1));
+            $akumulasiBulanLalu = $penyusutanBulanan * ($frekuensi - 1);
+
+            $nilaiAwal = $hargaTotal - $akumulasiBulanLalu;
             $nilaiPenyusutan = $penyusutanBulanan;
+            $nilaiBuku = $hargaTotal - $akumulasi;
+
+            // Proteksi Masa Akhir
+            if ($frekuensi >= $masaPenyusutan) {
+                $nilaiPenyusutan = $nilaiAwal - $nilaiResidual;
+                $akumulasi = $hargaTotal - $nilaiResidual;
+                $nilaiBuku = $nilaiResidual;
+            }
         }
 
         return [
