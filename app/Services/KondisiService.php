@@ -37,11 +37,23 @@ class KondisiService
 
     public function delete(KondisiBarang $kondisiBarang)
     {
+        //jika kondisi masih di pakai di barang maka nggak bisa di hapus
+        if ($kondisiBarang->barangs()->count() > 0) {
+            throw ValidationException::withMessages([
+                'kondisi_barang_id' => 'Kondisi barang tidak bisa dihapus karena masih digunakan oleh barang.',
+            ]);
+        };
+
         return $this->repository->delete($kondisiBarang);
     }
 
     public function bulkDelete(array $ids)
     {
+        if (KondisiBarang::whereIn('id', $ids)->whereHas('barangs')->exists()) {
+            throw ValidationException::withMessages([
+                'kondisi_barang_id' => 'Beberapa kondisi barang tidak bisa dihapus karena masih digunakan oleh barang.',
+            ]);
+        };
         return $this->repository->bulkDelete($ids);
     }
 }

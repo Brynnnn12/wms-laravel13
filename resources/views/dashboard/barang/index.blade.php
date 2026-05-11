@@ -33,7 +33,7 @@
             <div class="rounded-3xl bg-white border border-slate-200 shadow-sm overflow-hidden mb-6">
                 <div class="px-6 py-5 border-b border-slate-100 bg-slate-50">
                     <form action="{{ route('barang.index') }}" method="GET" class="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-end">
-                        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                             <div class="relative">
                                 <input type="text"
                                        name="search"
@@ -69,6 +69,16 @@
                                 @foreach($lokasiPenyimpanans as $lokasi)
                                     <option value="{{ $lokasi->id }}" {{ request('lokasi_penyimpanan_id') == $lokasi->id ? 'selected' : '' }}>
                                         {{ $lokasi->nama_lokasi }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <select name="nama_ruang_id"
+                                    class="w-full rounded-2xl border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                <option value="">Semua Ruang</option>
+                                @foreach($namaRuangs as $ruang)
+                                    <option value="{{ $ruang->id }}" {{ request('nama_ruang_id') == $ruang->id ? 'selected' : '' }}>
+                                        {{ $ruang->nama_ruang }} ({{ $ruang->lokasiPenyimpanan->nama_lokasi ?? '' }})
                                     </option>
                                 @endforeach
                             </select>
@@ -113,6 +123,12 @@
                         </div>
 
                         <div class="flex items-center gap-3">
+
+                            <a href="{{ route('barang.export', request()->query()) }}"
+                               class="inline-flex items-center px-4 py-2 rounded-2xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition">
+                                <i class="fas fa-download mr-2"></i>
+                                Export Excel
+                            </a>
 
                             <button type="button"
                                     id="bulk-delete-btn"

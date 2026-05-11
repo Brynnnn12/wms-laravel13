@@ -96,26 +96,26 @@ class KondisiBarangController extends Controller
     #[Authorize('delete', 'kondisi_barang')]
     public function destroy(KondisiBarang $kondisi_barang)
     {
-        $this->service->delete($kondisi_barang);
-
-        toast('Kondisi barang berhasil dihapus!', 'success');
-
+        try {
+            $this->service->delete($kondisi_barang);
+            toast('Kondisi barang berhasil dihapus!', 'success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            toast($e->getMessage(), 'error');
+        }
         return redirect()->route('kondisi-barang.index');
     }
 
     #[Authorize('delete', KondisiBarang::class)]
     public function bulkDelete(Request $request): RedirectResponse
     {
-        $ids = $request->input('ids', []);
+        $ids = $request->get('ids', []);
 
-        if (empty($ids)) {
-            toast('Tidak ada kondisi barang yang dipilih untuk dihapus.', 'warning');
-            return redirect()->route('kondisi-barang.index');
+        try {
+            $this->service->bulkDelete($ids);
+            toast('Kondisi barang berhasil dihapus!', 'success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            toast($e->getMessage(), 'error');
         }
-
-        $this->service->bulkDelete($ids);
-
-        toast('Kondisi barang berhasil dihapus!', 'success');
 
         return redirect()->route('kondisi-barang.index');
     }

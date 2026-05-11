@@ -95,10 +95,12 @@ class StatusBarangController extends Controller
     #[Authorize('delete', 'status_barang')]
     public function destroy(StatusBarang $status_barang): RedirectResponse
     {
-        $this->statusService->delete($status_barang);
-
-        toast('Status barang berhasil dihapus!', 'success');
-
+        try {
+            $this->statusService->delete($status_barang);
+            toast('Status barang berhasil dihapus!', 'success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            toast($e->getMessage(), 'error');
+        }
         return redirect()->route('status-barang.index');
     }
 
@@ -113,10 +115,12 @@ class StatusBarangController extends Controller
             'ids.*' => ['exists:status_barangs,id'],
         ]);
 
-        $deleted = $this->statusService->bulkDelete($validated['ids']);
-
-        toast("{$deleted} status barang berhasil dihapus!", 'success');
-
+        try {
+            $this->statusService->bulkDelete($validated['ids']);
+            toast('Status barang berhasil dihapus!', 'success');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            toast($e->getMessage(), 'error');
+        }
         return redirect()->route('status-barang.index');
     }
 }

@@ -28,11 +28,21 @@ class StatusService
 
     public function delete(StatusBarang $statusBarang)
     {
+        if ($statusBarang->barangs()->count() > 0) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'status_barang_id' => 'Status barang tidak bisa dihapus karena masih digunakan oleh barang.',
+            ]);
+        };
         return $this->repository->delete($statusBarang);
     }
 
     public function bulkDelete(array $ids)
     {
+        if (StatusBarang::whereIn('id', $ids)->whereHas('barangs')->exists()) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'status_barang_id' => 'Beberapa status barang tidak bisa dihapus karena masih digunakan oleh barang.',
+            ]);
+        };
         return $this->repository->bulkDelete($ids);
     }
 

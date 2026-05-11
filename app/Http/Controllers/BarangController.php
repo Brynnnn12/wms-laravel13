@@ -10,8 +10,13 @@ use App\Models\StatusBarang;
 use App\Models\KondisiBarang;
 use App\Models\NamaRuang;
 use App\Models\LokasiPenyimpanan;
+use App\Exports\BarangExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Services\BarangService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+
 
 class BarangController extends Controller
 {
@@ -20,7 +25,7 @@ class BarangController extends Controller
     ) {
     }
 
-    public function index(Request $request)
+    public function index(Request $request) : View
     {
         $filters = $request->only([
             'jenis_barang_id',
@@ -46,13 +51,13 @@ class BarangController extends Controller
         return view('dashboard.barang.index', $data);
     }
 
-    public function create()
+    public function create() : View
     {
         $data = $this->getMasterData();
         return view('dashboard.barang.create', $data);
     }
 
-    public function store(StoreBarangRequest $request)
+    public function store(StoreBarangRequest $request) : RedirectResponse
     {
         // Logic hitung harga_total dipindah ke Service agar Controller tetap ramping
         $this->service->create($request->validated());
@@ -62,14 +67,14 @@ class BarangController extends Controller
         return redirect()->route('barang.index');
     }
 
-    public function show(Barang $barang)
+    public function show(Barang $barang) : View
     {
         // Load relasi agar di view tidak terjadi N+1 Query
         $barang->load(['jenisBarang', 'statusBarang', 'kondisiBarang', 'namaRuang.lokasiPenyimpanan']);
         return view('dashboard.barang.show', compact('barang'));
     }
 
-    public function edit(Barang $barang)
+    public function edit(Barang $barang) : View 
     {
         $data = $this->getMasterData();
         $data['barang'] = $barang;
@@ -77,7 +82,7 @@ class BarangController extends Controller
         return view('dashboard.barang.edit', $data);
     }
 
-    public function update(UpdateBarangRequest $request, Barang $barang)
+    public function update(UpdateBarangRequest $request, Barang $barang) : RedirectResponse
     {
         $this->service->update($barang, $request->validated());
 
@@ -86,7 +91,7 @@ class BarangController extends Controller
         return redirect()->route('barang.index');
     }
 
-    public function destroy(Barang $barang)
+    public function destroy(Barang $barang) : RedirectResponse
     {
         $this->service->delete($barang);
 
@@ -95,7 +100,7 @@ class BarangController extends Controller
         return redirect()->route('barang.index');
     }
 
-    public function bulkDelete(Request $request)
+    public function bulkDelete(Request $request) : RedirectResponse
     {
         $ids = $request->get('ids', []);
         if (empty($ids)) {
@@ -105,6 +110,21 @@ class BarangController extends Controller
         $this->service->bulkDelete($ids);
         toast('Data terpilih berhasil dihapus!', 'success');
         return redirect()->route('barang.index');
+    }
+
+    public function export(Request $request)
+    {
+        $filters = $request->only([
+            'jenis_barang_id',
+            'status_barang_id',
+            'lokasi_penyimpanan_id',
+            'nama_ruang_id',
+        ]);
+
+        $tanggal = now()->format('Y-m-d');
+        $filename = "barang-{$tanggal}.xlsx";
+
+        return Excel::download(new BarangExport($filters), $filename);
     }
 
     public function cetakLabel(Barang $barang)
