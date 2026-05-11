@@ -4,6 +4,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 /*
@@ -20,7 +21,6 @@ use Tests\TestCase;
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');
-
 /*
 |--------------------------------------------------------------------------
 | Expectations
@@ -70,9 +70,14 @@ function createSuperAdmin(array $attributes = []): User
     return createUserWithRole('super-admin', $attributes);
 }
 
-function createAdmin(array $attributes = []): User
+function createInventaris(array $attributes = []): User
 {
-    return createUserWithRole('admin', $attributes);
+    return createUserWithRole('inventaris', $attributes);
+}
+
+function createKeuangan(array $attributes = []): User
+{
+    return createUserWithRole('keuangan', $attributes);
 }
 
 function createPermissions(array $permissions)

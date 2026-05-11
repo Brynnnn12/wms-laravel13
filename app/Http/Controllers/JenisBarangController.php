@@ -11,6 +11,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 
+use function Laravel\Prompts\confirm;
+
 class JenisBarangController extends Controller
 {
     public function __construct(
@@ -26,11 +28,10 @@ class JenisBarangController extends Controller
     {
         $jenisBarangs = $this->service->paginate(10);
 
-        $title = 'Hapus Jenis Barang!';
-        $text = 'Apakah Anda yakin ingin menghapus jenis barang ini?';
-
-        confirmDelete($title, $text);
-
+        confirmDelete(
+            'Hapus Jenis Barang!',
+            'Apakah Anda yakin ingin menghapus jenis barang ini?'
+        );
         return view('dashboard.jenis-barang.index', compact('jenisBarangs'));
     }
 
