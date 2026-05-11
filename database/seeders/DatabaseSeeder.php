@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             KondisiBarangSeeder::class,
             LokasiPenyimpananSeeder::class,
             NamaRuangSeeder::class,
-            BarangSeeder::class,
         ]);
     }
 }

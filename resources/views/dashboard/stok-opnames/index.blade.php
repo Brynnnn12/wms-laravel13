@@ -19,12 +19,13 @@
                                 Kelola pengecekan stok barang di seluruh ruang.
                             </p>
                         </div>
-
+                        @can('create', App\Models\StokOpname::class)
                         <a href="{{ route('stok-opnames.create') }}"
                             class="inline-flex items-center px-5 py-3 rounded-2xl bg-white text-emerald-700 font-semibold text-sm shadow-lg hover:scale-[1.02] transition">
                             <i class="fas fa-plus mr-2"></i>
                             Buat Stok Opname
                         </a>
+                        @endcan
                     </div>
                 </div>
             </div>

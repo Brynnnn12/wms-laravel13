@@ -30,8 +30,8 @@
             <div class="w-full max-w-md">
 
                 <!-- HEADER -->
-                <h2 class="text-2xl font-semibold text-gray-700 text-center">Brand</h2>
-                <p class="text-xl text-gray-600 text-center mb-6">Welcome back!</p>
+                <h2 class="text-2xl font-semibold text-gray-700 text-center">Sistem Inventory</h2>
+                <p class="text-xl text-gray-600 text-center mb-6">Selamat datang kembali!</p>
 
                 <!-- GOOGLE LOGIN -->
                 <a href="{{ route('google.redirect') }}"
@@ -43,14 +43,14 @@
                         </svg>
                     </div>
                     <span class="px-4 py-3 w-5/6 text-center text-gray-600 font-bold">
-                        Sign in with Google
+                        Masuk dengan Google
                     </span>
                 </a>
 
                 <!-- DIVIDER -->
                 <div class="mt-6 flex items-center justify-between">
                     <span class="border-b w-1/5"></span>
-                    <span class="text-xs text-gray-500 uppercase">or</span>
+                    <span class="text-xs text-gray-500 uppercase">atau</span>
                     <span class="border-b w-1/5"></span>
                 </div>
 
