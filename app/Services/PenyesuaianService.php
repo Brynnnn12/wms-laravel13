@@ -16,7 +16,6 @@ class PenyesuaianService
     public function store(array $data): array
     {
         return DB::transaction(function () use ($data) {
-            // Validasi apakah stok opname sudah pernah digunakan untuk penyesuaian
             $existingPenyesuaian = $this->repository->findByStokOpname($data['stok_opname_id']);
             if ($existingPenyesuaian->isNotEmpty()) {
                 throw new \Exception('Stok opname ini sudah pernah digunakan untuk penyesuaian. Pilih stok opname yang belum pernah diproses.');

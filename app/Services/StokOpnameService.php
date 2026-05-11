@@ -17,6 +17,13 @@ class StokOpnameService
     public function store(array $data): StokOpname
     {
         return DB::transaction(function () use ($data) {
+
+            $existingOpname = $this->repository->findByTanggalDanRuang($data['tanggal_so'], $data['nama_ruang_id']);
+
+            if ($existingOpname) {
+                throw new \Exception('Stok opname untuk tanggal dan ruang tersebut sudah ada.');
+            };
+
             $stokOpname = $this->repository->create([
                 'user_id' => Auth::id(),
                 'tanggal_so' => $data['tanggal_so'],

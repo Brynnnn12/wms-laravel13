@@ -60,7 +60,6 @@ class StokOpnameController extends Controller
         }
     }
 
-    #[Authorize('view', 'stok-opname')]
     public function show(StokOpname $stokOpname): View
     {
         $stokOpname->load(['user', 'namaRuang', 'penyesuaian.barang', 'penyesuaian.user']);

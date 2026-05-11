@@ -20,6 +20,13 @@ class StokOpnameRepository
             ->find($id);
     }
 
+    public function findByTanggalDanRuang(string $tanggalSo, string $namaRuangId): ?StokOpname
+    {
+        return StokOpname::where('tanggal_so', $tanggalSo)
+            ->where('nama_ruang_id', $namaRuangId)
+            ->first();
+    }
+
     public function getAll(int $perPage = 15, array $filters = [])
     {
         $query = StokOpname::query()

@@ -175,11 +175,13 @@
                                                 <i class="fas fa-eye text-sm"></i>
                                             </a>
 
-                                            <a href="{{ route('penyesuaians.create', ['stok_opname_id' => $opname->id]) }}"
-                                                class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-emerald-500 hover:text-white transition"
-                                                title="Buat Penyesuaian">
-                                                <i class="fas fa-plus text-sm"></i>
-                                            </a>
+                                            @if(!$opname->penyesuaian)
+                                                <a href="{{ route('stok-opnames.penyesuaian', $opname) }}"
+                                                    class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-green-500 hover:text-white transition"
+                                                    title="Buat penyesuaian">
+                                                    <i class="fas fa-edit text-sm"></i>
+                                                </a>
+                                            @endif
 
                                         </div>
                                     </td>

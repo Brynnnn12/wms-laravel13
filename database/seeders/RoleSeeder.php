@@ -33,6 +33,7 @@ class RoleSeeder extends Seeder
             'barang.view', 'barang.create', 'barang.update', 'barang.delete',
             'penyesuaian.view', 'penyesuaian.create', 'penyesuaian.update', 'penyesuaian.delete',
             'kondisi barang.view', 'status barang.view', // Tambahan agar bisa melihat referensi saat input barang
+            'stok opname.view', // Inventaris perlu akses untuk buat dan lihat stok opname
         ]);
 
         // Keuangan: Laporan SO (Stok Opname) dan Laporan Penyusutan
