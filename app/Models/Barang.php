@@ -53,6 +53,11 @@ class Barang extends Model
         return $this->belongsTo(NamaRuang::class);
     }
 
+    public function penyesuaian(): HasMany
+    {
+        return $this->hasMany(Penyesuaian::class);
+    }
+
     public function penyusutans(): HasMany
     {
         return $this->hasMany(Penyusutan::class);

@@ -80,14 +80,8 @@
                                 <input type="number"
                                        name="jml_barang"
                                        value="{{ old('jml_barang', $barang->jml_barang) }}"
-                                       required
-                                       min="1"
-                                       placeholder="0"
-                                       class="w-full rounded-2xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
-
-                                @error('jml_barang')
-                                    <p class="text-sm text-rose-600 mt-2">{{ $message }}</p>
-                                @enderror
+                                       readonly
+                                       class="w-full rounded-2xl border-slate-300 bg-slate-50">
                             </div>
 
                             <div>

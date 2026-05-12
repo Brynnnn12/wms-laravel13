@@ -27,21 +27,64 @@ class RoleSeeder extends Seeder
 
         // Inventaris: Lokasi, Ruang, Jenis Barang, Barang, Penyesuaian
         $inventaris->syncPermissions([
-            'lokasi penyimpanan.view', 'lokasi penyimpanan.create', 'lokasi penyimpanan.update', 'lokasi penyimpanan.delete',
-            'ruangan.view', 'ruangan.create', 'ruangan.update', 'ruangan.delete',
-            'jenis barang.view', 'jenis barang.create', 'jenis barang.update', 'jenis barang.delete',
-            'barang.view', 'barang.create', 'barang.update', 'barang.delete',
-            'penyesuaian.view', 'penyesuaian.create', 'penyesuaian.update', 'penyesuaian.delete',
-            'kondisi barang.view', 'status barang.view', // Tambahan agar bisa melihat referensi saat input barang
-            'stok opname.view', // Inventaris perlu akses untuk buat dan lihat stok opname
+            // Lokasi Penyimpanan
+            'lokasi penyimpanan.view',
+            'lokasi penyimpanan.create',
+            'lokasi penyimpanan.update',
+            'lokasi penyimpanan.delete',
+
+            // Ruangan
+            'ruangan.view',
+            'ruangan.create',
+            'ruangan.update',
+            'ruangan.delete',
+
+            // Jenis Barang
+            'jenis barang.view',
+            'jenis barang.create',
+            'jenis barang.update',
+            'jenis barang.delete',
+
+            // Kondisi Barang
+            'kondisi barang.view',
+            'kondisi barang.create',
+            'kondisi barang.update',
+            'kondisi barang.delete',
+
+            // Status Barang
+            'status barang.view',
+            'status barang.create',
+            'status barang.update',
+            'status barang.delete',
+
+            // Barang
+            'barang.view',
+            'barang.create',
+            'barang.update',
+            'barang.delete',
+
+            // Penyesuaian
+            'penyesuaian.view',
+            'penyesuaian.create',
+            'penyesuaian.update',
+            'penyesuaian.delete',
+
+            // Hanya melihat stok opname
+            'stok opname.view',
+
+            // Lihat penyusutan
+            'penyusutan.view',
         ]);
 
-        // Keuangan: Laporan SO (Stok Opname) dan Laporan Penyusutan
+        // Keuangan
         $keuangan->syncPermissions([
+            // Stok Opname
             'stok opname.view',
-            'stok opname.create', // Biasanya keuangan perlu 'create' untuk generate sesi opname
+            'stok opname.create',
+
+            // Penyusutan
             'penyusutan.view',
-            'penyusutan.create' // Biasanya keuangan yang men-trigger proses penyusutan
+            'penyusutan.create',
         ]);
 
         // 3. BUAT USER DUMMY (Jika belum ada)

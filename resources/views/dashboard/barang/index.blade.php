@@ -191,6 +191,7 @@
                                 @forelse($barangs as $index => $item)
                                     <tr class="hover:bg-slate-50">
 
+                                        @if(!\App\Models\Penyesuaian::where('barang_id', $item->id)->exists() && !\App\Models\Penyusutan::where('barang_id', $item->id)->exists())
                                         <td class="px-6 py-4 text-center">
                                             <input type="checkbox"
                                                    name="ids[]"
@@ -198,6 +199,11 @@
                                                    data-checkbox
                                                    class="item-checkbox rounded border-slate-300 text-emerald-600">
                                         </td>
+                                        @else
+                                        <td class="px-6 py-4 text-center">
+                                            -
+                                        </td>
+                                        @endif
 
                                         <td class="px-6 py-4 text-sm">
                                             {{ $barangs->firstItem() + $index }}
@@ -246,12 +252,14 @@
                                                     <i class="fas fa-pen text-sm"></i>
                                                 </a>
 
+                                                @if(!\App\Models\Penyesuaian::where('barang_id', $item->id)->exists() && !\App\Models\Penyusutan::where('barang_id', $item->id)->exists())
                                                 <button type="button"
                                                         data-confirm-delete
                                                         data-confirm-route="{{ route('barang.destroy', $item) }}"
                                                         class="w-10 h-10 rounded-xl border flex items-center justify-center hover:bg-rose-600 hover:text-white transition">
                                                     <i class="fas fa-trash text-sm"></i>
                                                 </button>
+                                                @endif
 
                                             </div>
                                         </td>

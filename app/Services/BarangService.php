@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Barang;
 use App\Repositories\BarangRepository;
+use App\Models\Penyesuaian;
+use App\Models\Penyusutan;
 use Carbon\Carbon; // Pastikan Carbon diimport
 
 class BarangService
@@ -35,10 +37,16 @@ class BarangService
 
     public function update(Barang $barang, array $data): Barang
     {
-        //jika harga_satuan atau jml_barang diupdate, maka harga_total juga harus diupdate
-        if (isset($data['harga_satuan']) || isset($data['jml_barang'])) {
-            $hargaSatuan = $data['harga_satuan'] ?? $barang->harga_satuan;
-            $jmlBarang = $data['jml_barang'] ?? $barang->jml_barang;
+        if (Penyesuaian::where('barang_id', $barang->id)->exists() || Penyusutan::where('barang_id', $barang->id)->exists()) {
+            throw new \Exception('Barang sudah di-stok opname atau penyusutan, tidak bisa diedit.');
+        }
+        // Jangan ubah jumlah barang (jml_barang) di update
+        unset($data['jml_barang']);
+
+        //jika harga_satuan diupdate, maka harga_total juga harus diupdate
+        if (isset($data['harga_satuan'])) {
+            $hargaSatuan = $data['harga_satuan'];
+            $jmlBarang = $barang->jml_barang;
             $data['harga_total'] = $hargaSatuan * $jmlBarang;
         }
         return $this->repository->update($barang, $data);
@@ -46,11 +54,20 @@ class BarangService
 
     public function delete(Barang $barang): void
     {
+        if (Penyesuaian::where('barang_id', $barang->id)->exists() || Penyusutan::where('barang_id', $barang->id)->exists()) {
+            throw new \Exception('Barang sudah di-stok opname atau penyusutan, tidak bisa dihapus.');
+        }
         $this->repository->delete($barang);
     }
 
     public function bulkDelete(array $ids): int
     {
+        $barangs = Barang::whereIn('id', $ids)->get();
+        foreach ($barangs as $barang) {
+            if (Penyesuaian::where('barang_id', $barang->id)->exists() || Penyusutan::where('barang_id', $barang->id)->exists()) {
+                throw new \Exception('Salah satu barang sudah di-stok opname atau penyusutan, tidak bisa dihapus.');
+            }
+        }
         return $this->repository->bulkDelete($ids);
     }
 
