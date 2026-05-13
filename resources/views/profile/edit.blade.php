@@ -67,7 +67,7 @@
                                 </span>
                             </button>
 
-                            <button type="button"
+                            {{-- <button type="button"
                                 @click="tab = 'delete'"
                                 :class="tab === 'delete' ? 'bg-rose-50 text-rose-700' : 'text-slate-700 hover:bg-slate-50'"
                                 class="w-full text-left rounded-2xl px-4 py-3 flex items-center justify-between gap-3 transition">
@@ -75,7 +75,7 @@
                                     <i class="fas fa-trash text-rose-600"></i>
                                     Hapus Akun
                                 </span>
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
 
@@ -92,9 +92,9 @@
                         @include('profile.partials.update-password-form')
                     </div>
 
-                    <div x-show="tab === 'delete'" x-cloak class="bg-white rounded-3xl border border-rose-200 shadow-sm p-6 md:p-8">
+                    {{-- <div x-show="tab === 'delete'" x-cloak class="bg-white rounded-3xl border border-rose-200 shadow-sm p-6 md:p-8">
                         @include('profile.partials.delete-user-form')
-                    </div>
+                    </div> --}}
 
                 </div>
 

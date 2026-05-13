@@ -21,8 +21,7 @@
     <div class="min-h-screen flex">
 
         <!-- LEFT IMAGE -->
-        <div class="hidden lg:block lg:w-1/2 bg-cover bg-center"
-            style="background-image:url('https://images.unsplash.com/photo-1546514714-df0ccc50d7bf?auto=format&fit=crop&w=800&q=80')">
+        <div class="hidden lg:block lg:w-1/2 bg-cover bg-center" style="background-image:url('/Logo 1.jpeg')">
         </div>
 
         <!-- RIGHT CONTENT -->
@@ -30,9 +29,10 @@
             <div class="w-full max-w-md">
 
                 <!-- HEADER -->
-                <h2 class="text-2xl font-semibold text-gray-700 text-center">Sistem Inventory</h2>
-                <p class="text-xl text-gray-600 text-center mb-6">Selamat datang kembali!</p>
-
+                    <div class="mb-6 flex flex-col items-center justify-center space-y-2 text-center">
+                        <img src="/Logo 2.png" alt="Logo Yayasan Al Biruni" class="h-16 w-auto">
+                        <p class="text-sm font-medium text-gray-500 tracking-wide uppercase">Yayasan Al Biruni</p>
+                    </div>
                 <!-- GOOGLE LOGIN -->
                 <a href="{{ route('google.redirect') }}"
                     class="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100 border">
@@ -55,14 +55,19 @@
                 </div>
 
                 <!-- SLOT (FORM DINAMIS) -->
-                <div class="mt-6">
+                <div class="mt-6 mb-2">
                     {{ $slot }}
                 </div>
+
+                <footer class="text-center text-sm text-gray-500 mt-8">
+                    &copy; {{ date('Y') }} Sistem Inventory Yayasan Al Biruni. All rights reserved.
+                </footer>
+
 
             </div>
         </div>
     </div>
-@include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
+    @include('sweetalert::alert', ['cdn' => 'https://cdn.jsdelivr.net/npm/sweetalert2@9'])
 
 </body>
 
